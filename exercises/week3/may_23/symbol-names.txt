@@ -1,0 +1,8 @@
+add: _Z3adddd
+average:  _Z7averageSt6vectorIdSaIdEE
+
+after using templates:
+_ZN9__gnu_cxxL21__default_lock_policyE
+_ZStL13allocator_arg
+_ZStL19piecewise_construct
+_ZStL6ignore

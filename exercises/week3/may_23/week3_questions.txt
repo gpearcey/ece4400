@@ -1,0 +1,26 @@
+May 23
+
+2. the function works normally for ints and doubles
+when the result is a whole number. It is incorrect if the type 
+is int and the result is not a whole number because the result 
+is rounded. It also does not work for strings. 
+
+3. average({1,2,3,4}) gives 2, because it processes the values
+as ints, and it rounds 2.5 down to 2. When std::vector<double> values = {1,2,3,4};
+is used instead, the result is 2.5. 
+
+5. Would be same as in 2.
+
+May 25
+1. The array can't hold objects like std::string because it's not a basic data type. 
+std::string is an object and "bigger.get()[i] = (*this)[i];" will only work for basic 
+data types, because it is making copies and doesn't handle construction and destruction
+of the values being copied, which is required for strings. Once the string array size 
+is larger than 8, there will be an error. 
+
+4. The GrowableArray average() method works with ints, doubles, and strings.
+It works with strings because it uses the template add() method, and the operator 
+overload functions. You can instantiate GrowableArray<string> regardless of whether average() 
+is called. The when GrowableArray<int> is instantiated, the average() method returns a 
+rounded result. 
+
