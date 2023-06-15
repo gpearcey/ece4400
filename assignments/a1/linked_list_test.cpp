@@ -1,7 +1,7 @@
 #include "List.h"
 
 int main(){
-    Node n(5);
+    List<int> l;
 
     return 0;
 };

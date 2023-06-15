@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <memory>
+#include <iostream>
 
 template<typename T>
 class List
@@ -31,7 +32,9 @@ public:
 		 *
 		 * @returns   a reference to the "current" element
 		 */
-		T& operator*();
+		T& operator*(){
+			
+		};
 
 		/**
 		 * Pre-increment operator (i.e., `++i`).
@@ -41,7 +44,9 @@ public:
 		 *
 		 * @returns   a reference to this iterator, after incrementing
 		 */
-		iterator& operator++();
+		iterator& operator++(){
+			
+		}
 
 		/**
 		 * Post-increment operator (i.e., `i++`).
@@ -70,18 +75,23 @@ public:
 	//! Default constructor
 	List(){
 		head_ = std::make_unique<Node>();
-	}
+	};
 
 	//! Copy constructor
-	List(const List&);
+	List(const List& other){
+		this->head_->value = std::make_unique<Node>(other->head_);
+		
+	};
 
 	//! Move constructor
-	List(List&&);
+	List(List&& other){
+		this->head = std::move(other->head_);
+	};
 
 	//! Destructor
 	~List(){
-		while (head_.getNext() != nullptr){
-			head_ = std::move(head_.getNext()); 
+		while (this->head_ != nullptr){
+			this->head_ = std::move(this->head_->getNext()); 
 		}
 
 	};
@@ -103,7 +113,9 @@ public:
 	bool empty() const;
 
 	//! Get an iterator to the beginning of the list
-	iterator begin();
+	iterator begin(){
+
+	};
 
 	//! Get an iterator just past the end of the list
 	iterator end();
@@ -164,12 +176,12 @@ private:
 		};
 
 		void setValue(T value){
-			value_ = value;
+			value_ = std::move(value);
 			return;
 		};
 
-		std::unique_ptr<Node>& getNext(){
-			return &next_;
+		Node* getNext(){
+			return next_.get();
 		};
 
 		void setNext(std::unique_ptr<Node>& next_node){
@@ -178,7 +190,7 @@ private:
 		};
 
 		~Node(){
-			//add cout
+			std::cout << "Node with value " << this->value_ << " destructed" << std::endl;
 		};
 
 	private:
