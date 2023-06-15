@@ -1,0 +1,40 @@
+@startuml
+
+class Node{
+    Node()
+    Node(T value)
+    T value_
+    NodePtr next_
+}
+
+class List{
+    Node head_
+    List()
+    List(const List&)
+    List(List&&)
+    ~List()
+    List& operator= (const List&)
+    List& operator= (List&&)
+    size_t size() const
+    bool empty() const
+    iterator begin()
+    iterator end()
+    void push_front(const T&)
+    void push_front(T&&)
+    void push_back(const T&)
+    iterator insert(iterator, const T&)
+    iterator insert(iterator, T&&)
+    void erase(iterator)
+}
+
+class iterator{
+    T& operator*()
+    iterator* operator++()
+    iterator operator++ (int ignored)
+    bool operator== (const iterator& const)
+    bool operator!= (const iterator&) const
+}
+
+List +-- iterator
+List +-- Node
+@enduml
