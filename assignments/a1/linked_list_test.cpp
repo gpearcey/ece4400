@@ -1,8 +1,50 @@
 #include "List.h"
 
 using namespace std;
-
+template<typename T>
+void printList(List<T> l)  {
+    for (auto it = l.begin(); it != l.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+};
 int main(){
+
+
+/**
+    List<int> l;
+    l.push_back(1);
+    l.push_back(2);
+    l.push_back(3);
+    auto iter = l.begin();
+
+    cout << *iter << endl;
+    ++iter;
+    cout << *iter << endl;
+    ++iter;
+    cout << *iter << endl;
+
+    //printList(l);
+    int s = 8;
+    auto iter2 = l.insert(iter,s);
+    //printList(l);
+    cout << *iter2  << endl;
+    //iter++;
+
+    printList(l);
+    cout << l.size() << endl;
+
+*/
+    List<double> d;
+    d.push_back(1.1);
+    d.push_back(2.2);
+    auto iter = d.begin();
+    d.insert(iter,3.3);
+
+
+
+    
+    /**
     List<int> l;
 
     //check if list is empty
@@ -32,6 +74,9 @@ int main(){
     std::unique_ptr<int> u_ptr2 = std::make_unique<int>();
     b.push_back(std::move(u_ptr2));
 
+    */
+
+   /**
     //testing copy constructor
     //List<int> list;
     //List<int> copy_list = list;
@@ -78,8 +123,27 @@ int main(){
         cout << "iterators are not equal" << endl;
     }
 
-    e.insert(iter1, 52);
+    //e.insert(iter1, 52);
 
     e.erase(iter1);
+
+    //testing copy insert
+    
+    e.push_back(4.3);
+    
+    int hi = 4;
+
+    
+    auto iter5 = e.begin();
+    cout << "iter5  being" << *iter5 << endl;
+    ++iter;
+    cout << "iter5 after increment" << *iter5 << endl;
+    printList(e);
+    cout << *iter5 << endl;
+    e.insert(iter5,hi);
+    //cout << *iter5 << endl;
+    //iter5++;
+    //cout << *iter5 << endl;
+    */
     return 0;
 };

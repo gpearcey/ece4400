@@ -35,7 +35,7 @@ public:
 		 * @returns   a reference to the "current" element
 		 */
 		T operator*(){
-			return node_pointer_->getValue();
+			return this->node_pointer_->getValue();
 		};
 
 		/**
@@ -48,7 +48,7 @@ public:
 		 */
 		iterator& operator++(){
 			if (node_pointer_){
-				node_pointer_ = node_pointer_->getNext();
+				this->node_pointer_ = this->node_pointer_->getNext();
 			}			
 			return *this;			
 		};
@@ -144,7 +144,21 @@ public:
 	//
 	//! How many elements are in this list?
 	size_t size() const{
-		return 0;
+
+		int count = 0;
+		if (head_->getNext() == nullptr){
+			count = 0;
+		}else{
+			//traverse through the list until the last node is reached
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != nullptr){
+				current_node = current_node->getNext();
+				count++;
+			}
+			count++;
+		}
+		return count;
+	
 	}
 
 	//! Is this list empty?
@@ -281,9 +295,39 @@ public:
 	 *
 	 * @returns   an iterator pointing at the newly-inserted element
 	 */
-	iterator insert(iterator, const T&){
-		iterator i;
-		return i;
+	iterator insert(iterator iter, const T& value){
+		std::cout << "copy insert" << std::endl;
+		//Don't insert if invalid iterator
+		if (iter.node_pointer_ == nullptr) {
+			std::cout << "Invalid iterator, can't insert element." << std::endl;
+			return iter;
+		}
+
+		//create new node
+		std::unique_ptr<Node> new_element = std::make_unique<Node>(std::move(value));	
+
+		//set new node to point to where iterator points to
+
+		if (new_element->getNext() == head_->getNext()) {
+			head_->setNext(new_element);
+			iter.node_pointer_ = head_->getNext();
+		} 
+		else {
+
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != iter.node_pointer_){
+				
+				current_node = current_node->getNext();
+				
+			}
+			new_element->setNext(current_node->next_);
+			
+			current_node->setNext(new_element);
+			iter.node_pointer_ = current_node->getNext();		
+			
+		}	
+			
+		return iter;
 	}
 
 	/**
@@ -293,34 +337,71 @@ public:
 	 * given iterator, using move semantics to avoid copies. After insertion
 	 * into a list of n elements, the list should contain n+1 elements
 	 * (i.e., no existing element should be replaced).
+	 * 
+	 * NOTE THIS MAKES A COPY OF THE ITERATOR AND DOES NOT UPDATE THE ITERATOR USED
 	 *
 	 * @returns   an iterator pointing at the newly-inserted element
 	 */
-	iterator insert(iterator, T&&){
-		iterator i;
-		return i;
+	iterator insert(iterator iter, T&& value){
+		std::cout << "move insert" << std::endl;
+		//Don't insert if invalid iterator
+		if (iter.node_pointer_ == nullptr) {
+			std::cout << "Invalid iterator, can't insert element." << std::endl;
+			return iter;
+		}
+		
+
+		//create new node
+		std::unique_ptr<Node> new_element = std::make_unique<Node>(std::move(value));	
+
+		//set new node to point to where iterator points to
+		if (iter.node_pointer_->getNext() == head_->getNext()) {
+			cout << "inserting at beginning of list"<< endl;
+			head_->setNext(new_element);
+			iter.node_pointer_ = head_->getNext();
+		} 
+		else {
+
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != iter.node_pointer_){
+				
+				current_node = current_node->getNext();
+				
+			}
+			new_element->setNext(current_node->next_);
+			
+			current_node->setNext(new_element);
+			iter.node_pointer_ = current_node->getNext();		
+			
+		}	
+			
+		return iter;
 	}
 
 	//! Remove an element from an arbitrary location
 	void erase(iterator iter){
-		std::cout << "erasing node with value " << iter.node_pointer_->getValue() << endl;
-		Node* current_node = head_->getNext();
-		while (current_node->getNext() != nullptr){
-			current_node = current_node->getNext();
+		//Don't erase if list is empty
+		if (iter.node_pointer_ == nullptr) {
+			std::cout << "Invalid iterator, can't erase element." << std::endl;
+			return;
 		}
-		current_node->setNext(iter.node_pointer_->getNext());
-		iter.node_pointer_ = iter.node_pointer_->getNext();
+		std::cout << "erasing node with value " << iter.node_pointer_->getValue() << endl;
 
 		
-
+		if (iter.node_pointer_ == head_->getNext()) {
+			head_->setNext(iter.node_pointer_->next_);//erase first element if only one element in list
+		} 
+		else {
+			//erase element iterator points to
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != iter.node_pointer_){
+				current_node = current_node->getNext();
+			}
+			current_node->setNext(iter.node_pointer_->next_);
+			iter.node_pointer_ = iter.node_pointer_->getNext();		
+		}
 		return;
 	}
-
-	//void printList(){
-	//	for (T e : this){
-	//		cout << e << endl;
-	//	}
-	//}
 
 
 	// Add whatever you need to add here
@@ -370,6 +451,11 @@ public:
 			return;
 		};
 
+		//void setNext(std::unique_ptr<Node>&& next_node){
+		//	next_ = std::move(next_node);
+		//	return;
+		//};
+//
 		~Node(){
 			//std::cout << "Node with value " << this->value_ << " destructed" << std::endl; //	NEED TO OVERLOAD << TO DISPLAY POINTERS AS T	
 		};

@@ -1,40 +1,52 @@
 @startuml
 
 class Node{
-    Node()
-    Node(T value)
-    T value_
-    NodePtr next_
+    + Node()
+    + Node(T value)
+    + Node(const Node& other)
+    + Node(Node&& other)
+    + T getValue()
+    + void setValue(T value)
+    + Node* getValue()
+    + void setNext(std::unique_ptr<Node>& next_node)
+    + ~Node()
+    - T value_
+    + std::unique_ptr<Node> next_
 }
 
 class List{
-    Node head_
-    List()
-    List(const List&)
-    List(List&&)
-    ~List()
-    List& operator= (const List&)
-    List& operator= (List&&)
-    size_t size() const
-    bool empty() const
-    iterator begin()
-    iterator end()
-    void push_front(const T&)
-    void push_front(T&&)
-    void push_back(const T&)
-    iterator insert(iterator, const T&)
-    iterator insert(iterator, T&&)
-    void erase(iterator)
+    -std::unique_ptr<Node> head_
+    +List()
+    +List(const List& other)
+    +List(List&& other)
+    +~List()
+    +List& operator= (const List& other)
+    +List& operator= (List&& other)
+    +size_t size() const
+    +bool empty() const
+    +iterator begin()
+    +iterator end()
+    +void push_front(const T& value)
+    +void push_front(T&& value)
+    +void push_back(const T& value)
+    +void push_back(T&& value)
+    +iterator insert(iterator iter, const T& value)
+    +iterator insert(iterator iter, T&& value)
+    +void erase(iterator iter)
 }
 
 class iterator{
-    T& operator*()
-    iterator* operator++()
-    iterator operator++ (int ignored)
-    bool operator== (const iterator& const)
-    bool operator!= (const iterator&) const
+    +T& operator*()
+    +iterator& operator++()
+    +iterator operator++ (int ignored)
+    +bool operator== (const iterator& other) const
+    +bool operator!= (const iterator& other) const
+    +Node* node_pointer_
 }
 
 List +-- iterator
 List +-- Node
+List --> Node
+iterator --> Node
+Node --> Node
 @enduml
