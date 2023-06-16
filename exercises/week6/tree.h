@@ -26,7 +26,7 @@ public:
      * Set the value of the tree's root node.
      */
     Tree& setRoot(T value){
-        root_.setValue(value);
+        *root_.setValue(value);
 		return *this;
 
     }

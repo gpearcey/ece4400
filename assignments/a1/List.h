@@ -18,11 +18,13 @@
 #include <cstddef>
 #include <memory>
 #include <iostream>
+using namespace std;
 
 template<typename T>
 class List
 {
 public:
+	class Node;
 	//! An iterator over the list
 	class iterator
 	{
@@ -32,8 +34,8 @@ public:
 		 *
 		 * @returns   a reference to the "current" element
 		 */
-		T& operator*(){
-			
+		T operator*(){
+			return node_pointer_->getValue();
 		};
 
 		/**
@@ -45,8 +47,9 @@ public:
 		 * @returns   a reference to this iterator, after incrementing
 		 */
 		iterator& operator++(){
+
 			
-		}
+		};
 
 		/**
 		 * Post-increment operator (i.e., `i++`).
@@ -69,6 +72,9 @@ public:
 
 		//! Is this iterator pointing at a different place from another?
 		bool operator!= (const iterator&) const;
+		Node* node_pointer_;
+	private:
+		
 	};
 
 
@@ -79,62 +85,171 @@ public:
 
 	//! Copy constructor
 	List(const List& other){
-		this->head_->value = std::make_unique<Node>(other->head_);
-		
+		this->head_ = std::make_unique<Node>(*other.head_);
+
 	};
 
 	//! Move constructor
 	List(List&& other){
-		this->head = std::move(other->head_);
+		this->head_ = std::move(other.head_);
 	};
 
 	//! Destructor
 	~List(){
-		while (this->head_ != nullptr){
-			this->head_ = std::move(this->head_->getNext()); 
-		}
+		//while (this->head_ != nullptr){
+		//	this->head_ = std::move(this->head_->next_); 
+		//}
 
 	};
 
 	//! Copy assignment operator
-	List& operator= (const List&);
+	List& operator= (const List& other){
+		//if (this != &other) {
+        	this->head_ = std::make_unique<Node>(*other.head_);
+    	//}
+		return *this;
+	}
 
 	//! Move assignment operator
-	List& operator= (List&&);
+	List& operator= (List&& other){
+		//if (this != &other) {
+			this->head_ = std::move(other.head_);
+		//}
+		return *this;
+	};
 
 
 	//
 	// Accessors:
 	//
 	//! How many elements are in this list?
-	size_t size() const;
+	size_t size() const{
+		return 0;
+	}
 
 	//! Is this list empty?
-	bool empty() const;
+	bool empty() const{
+		if (head_->getNext() == nullptr){
+			return true;
+		}
+		else{
+			return false;
+		}
+	};
 
 	//! Get an iterator to the beginning of the list
 	iterator begin(){
+		iterator i;
+		i.node_pointer_ = this->head_->getNext();
+		return i;
 
 	};
 
 	//! Get an iterator just past the end of the list
-	iterator end();
+	iterator end(){
+		iterator i;
+		//set last node to point to the new node
+		if (head_->getNext() == nullptr){
+			i.node_pointer_ = head_.get();
+		}else{
+			//traverse through the list until the last node is reached
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != nullptr){
+				current_node = current_node->getNext();
+			}
+			//set the last node to point to the new node
+			i.node_pointer_ = current_node->getNext();
+		}
+		return i;
+	}
 
 
 	//
 	// Mutators:
 	//
+
 	//! Copy an element to the front of the list
-	void push_front(const T&);
+	void push_front(const T& value){
+
+		//create new node
+		std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
+		
+		//set new node's next pointer to the node that used to be at the front if new node is not the first one to be added
+		if (head_->getNext() != nullptr){	
+			new_node->setNext(this->head_->next_);
+		}
+
+		//set the head to point to the new node
+		this->head_->setNext(new_node);
+
+		cout << "copied an element to the front of the list" << endl;
+
+		return;
+	};
 
 	//! Move an element to the front of the list
-	void push_front(T&&);
+	void push_front(T&& value){
+		std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));		
+
+		//set new node's next pointer to the node that used to be at the front if new node is not the first one to be added
+		if (head_->getNext() != nullptr){	
+			new_node->setNext(this->head_->next_);
+		}
+
+		//set the head to point to the new node
+		this->head_->setNext(new_node);
+
+		cout << "moved an element to the front of the list" << endl;
+
+		return;
+	};
 
 	//! Copy an element to the back of the list
-	void push_back(const T&);
+	void push_back(const T& value){
+		
+		//create new node
+		std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
+		
+		//set last node to point to the new node
+		if (head_->getNext() == nullptr){
+			head_->setNext(new_node);
+		}else{
+			//traverse through the list until the last node is reached
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != nullptr){
+				current_node = current_node->getNext();
+			}
+			//set the last node to point to the new node
+			current_node->setNext(new_node);
+		}
+
+		cout << "copied an element to the back of the list" << endl;
+
+		return;
+	};
 
 	//! Add an element to the back of the list
-	void push_back(T&&);
+	void push_back(T&& value){
+		//create new node
+		std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
+		
+		//set last node to point to the new node
+		if (head_->getNext() == nullptr){
+			head_->setNext(new_node);
+		}else{
+			//traverse through the list until the last node is reached
+			Node* current_node = head_->getNext();
+			while (current_node->getNext() != nullptr){
+				current_node = current_node->getNext();
+			}
+			//set the last node to point to the new node
+			current_node->setNext(new_node);
+		}
+
+		cout << "moved an element to the back of the list" << endl;
+
+		return;
+	};
 
 	/**
 	 * Copy an element into an arbitrary location.
@@ -163,13 +278,41 @@ public:
 	//! Remove an element from an arbitrary location
 	void erase(iterator);
 
-private:
+	//void printList(){
+	//	for (T e : this){
+	//		cout << e << endl;
+	//	}
+	//}
+
+
 	// Add whatever you need to add here
 
 	class Node{
 	public:
 		Node() : next_(nullptr){};
-		Node(T value) : value_(value), next_(nullptr){};
+		Node(T value) : value_(std::move(value)), next_(nullptr){};
+		//Node(const char *value) : value_(std::move(value)), next_(nullptr) {};
+		// Add a template for const types
+        //template<typename U>
+        //Node(U&& value) : value_(std::forward<U>(value)), next_(nullptr) {}
+		//Node(T&& value) : value_(std::forward<T>(value)), next_(nullptr) {};
+
+		//! Copy constructor
+		Node(const Node& other): value_(other.value_), next_(nullptr){
+    		if (other.next_) {
+    		    next_ = std::make_unique<Node>(*other.next_);
+    		}
+		};
+
+		//! Move constructor
+		Node(Node&& other) : value_(std::move(other.value_)), next_(nullptr){
+    		if (other.next_) {
+    		    next_ = std::move(other.next_);
+    		}
+		};
+
+		//template<typename U>
+    	//Node(U&& value) : value_(std::forward<U>(value)), next_(nullptr) {}
 
 		T getValue(){
 			return value_;
@@ -190,13 +333,13 @@ private:
 		};
 
 		~Node(){
-			std::cout << "Node with value " << this->value_ << " destructed" << std::endl;
+			//std::cout << "Node with value " << this->value_ << " destructed" << std::endl; //	NEED TO OVERLOAD << TO DISPLAY POINTERS AS T	
 		};
-
+		std::unique_ptr<Node> next_;//ANY WAY FOR THIS TO BE PRIVATE?
 	private:
 		T value_;
-		std::unique_ptr<Node> next_;
+		
 	};
-
+private:
 	std::unique_ptr<Node> head_;
 };
