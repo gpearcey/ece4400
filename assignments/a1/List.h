@@ -47,8 +47,10 @@ public:
 		 * @returns   a reference to this iterator, after incrementing
 		 */
 		iterator& operator++(){
-
-			
+			if (node_pointer_){
+				node_pointer_ = node_pointer_->getNext();
+			}			
+			return *this;			
 		};
 
 		/**
@@ -65,13 +67,31 @@ public:
 		 *
 		 * @returns   an iterator to the previously-current element
 		 */
-		iterator operator++(int ignored);
+		iterator operator++(int ignored){
+			iterator i = *this;
+            ++*this;						
+			return i;
+		}
 
 		//! Is this iterator pointing at the same place as another one?
-		bool operator== (const iterator&) const;
+		bool operator== (const iterator& other) const{
+			if (this->node_pointer_ == other.node_pointer_){
+				return true;
+			}
+			else{
+				return false;
+			}
+		};
 
 		//! Is this iterator pointing at a different place from another?
-		bool operator!= (const iterator&) const;
+		bool operator!= (const iterator& other) const{
+			if (this->node_pointer_ == other.node_pointer_){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
 		Node* node_pointer_;
 	private:
 		
@@ -261,7 +281,10 @@ public:
 	 *
 	 * @returns   an iterator pointing at the newly-inserted element
 	 */
-	iterator insert(iterator, const T&);
+	iterator insert(iterator, const T&){
+		iterator i;
+		return i;
+	}
 
 	/**
 	 * Move an element into an arbitrary location.
@@ -273,10 +296,25 @@ public:
 	 *
 	 * @returns   an iterator pointing at the newly-inserted element
 	 */
-	iterator insert(iterator, T&&);
+	iterator insert(iterator, T&&){
+		iterator i;
+		return i;
+	}
 
 	//! Remove an element from an arbitrary location
-	void erase(iterator);
+	void erase(iterator iter){
+		std::cout << "erasing node with value " << iter.node_pointer_->getValue() << endl;
+		Node* current_node = head_->getNext();
+		while (current_node->getNext() != nullptr){
+			current_node = current_node->getNext();
+		}
+		current_node->setNext(iter.node_pointer_->getNext());
+		iter.node_pointer_ = iter.node_pointer_->getNext();
+
+		
+
+		return;
+	}
 
 	//void printList(){
 	//	for (T e : this){

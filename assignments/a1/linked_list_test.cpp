@@ -54,5 +54,32 @@ int main(){
 
     cout << *iter << endl;
 
+    e.push_back(76.544);
+
+    ++iter;
+
+
+    cout << *iter << endl;
+    e.push_back(84);
+
+    iter++;
+
+    cout << *iter << endl;
+
+    auto iter1 = e.begin();
+    iter1++;
+    //iter1++;
+
+    if (iter == iter1){
+        cout << "iterators are equal" << endl;
+    }
+
+    if (iter != iter1){
+        cout << "iterators are not equal" << endl;
+    }
+
+    e.insert(iter1, 52);
+
+    e.erase(iter1);
     return 0;
 };
