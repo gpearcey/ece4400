@@ -35,13 +35,30 @@ int main(){
     cout << l.size() << endl;
 
 */
+
+/** //Testing inserting to front and end of list
     List<double> d;
     d.push_back(1.1);
     d.push_back(2.2);
-    auto iter = d.begin();
+    auto iter = d.end();
+    //iter++;
     d.insert(iter,3.3);
+    printList(d);
+*/
 
 
+    List<char> l;
+    l.push_back('a');
+    l.push_back('b');
+    //List<char> list(std::move(l));
+    List<char> list(std::move(l));
+    //list = std::move(l);
+    cout << list.empty() << endl;
+    printList(list);
+
+    //List<char> apple;
+    //apple = std::move(list);
+    //printList(apple);
 
     
     /**

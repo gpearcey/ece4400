@@ -105,25 +105,26 @@ public:
 
 	//! Copy constructor
 	List(const List& other){
+		head_ = std::make_unique<Node>();
 		this->head_ = std::make_unique<Node>(*other.head_);
 
 	};
 
 	//! Move constructor
 	List(List&& other){
-		this->head_ = std::move(other.head_);
+		head_ = std::make_unique<Node>();
+		if (this != &other) {
+			this->head_->next_ = std::move(other.head_->next_);
+		}
+		//
 	};
 
 	//! Destructor
-	~List(){
-		//while (this->head_ != nullptr){
-		//	this->head_ = std::move(this->head_->next_); 
-		//}
-
-	};
+	~List(){};
 
 	//! Copy assignment operator
 	List& operator= (const List& other){
+		cout << "copying list" << endl;
 		//if (this != &other) {
         	this->head_ = std::make_unique<Node>(*other.head_);
     	//}
@@ -132,9 +133,11 @@ public:
 
 	//! Move assignment operator
 	List& operator= (List&& other){
-		//if (this != &other) {
-			this->head_ = std::move(other.head_);
-		//}
+		cout << "moving list" << endl;
+		if (this != &other) {
+			this->head_->next_ = std::move(other.head_->next_);
+		}
+		
 		return *this;
 	};
 
@@ -298,10 +301,10 @@ public:
 	iterator insert(iterator iter, const T& value){
 		std::cout << "copy insert" << std::endl;
 		//Don't insert if invalid iterator
-		if (iter.node_pointer_ == nullptr) {
-			std::cout << "Invalid iterator, can't insert element." << std::endl;
-			return iter;
-		}
+		//if (iter.node_pointer_ == nullptr) {
+		//	std::cout << "Invalid iterator, can't insert element." << std::endl;
+		//	return iter;
+		//}
 
 		//create new node
 		std::unique_ptr<Node> new_element = std::make_unique<Node>(std::move(value));	
@@ -309,6 +312,8 @@ public:
 		//set new node to point to where iterator points to
 
 		if (new_element->getNext() == head_->getNext()) {
+			cout << "inserting at beginning of list"<< endl;
+			new_element->setNext(head_->next_);
 			head_->setNext(new_element);
 			iter.node_pointer_ = head_->getNext();
 		} 
@@ -344,19 +349,20 @@ public:
 	 */
 	iterator insert(iterator iter, T&& value){
 		std::cout << "move insert" << std::endl;
-		//Don't insert if invalid iterator
-		if (iter.node_pointer_ == nullptr) {
-			std::cout << "Invalid iterator, can't insert element." << std::endl;
-			return iter;
-		}
+		//Assuming null iterator indicates end of list
+		//if (iter.node_pointer_ == nullptr) {
+		//	std::cout << "Invalid iterator, can't insert element." << std::endl;
+		//	return iter;
+		//}
 		
 
 		//create new node
 		std::unique_ptr<Node> new_element = std::make_unique<Node>(std::move(value));	
 
 		//set new node to point to where iterator points to
-		if (iter.node_pointer_->getNext() == head_->getNext()) {
+		if (iter.node_pointer_ == head_->getNext()) {
 			cout << "inserting at beginning of list"<< endl;
+			new_element->setNext(head_->next_);
 			head_->setNext(new_element);
 			iter.node_pointer_ = head_->getNext();
 		} 
