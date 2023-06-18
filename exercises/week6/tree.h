@@ -5,7 +5,6 @@
 */
 
 
-
 #include <list>
 #include <iostream>
 #include <memory>
@@ -22,11 +21,12 @@ public:
 		// Create the root node.
 		root_ = std::make_unique<Node>();
 	}
+
     /**
      * Set the value of the tree's root node.
      */
     Tree& setRoot(T value){
-        *root_.setValue(value);
+        this->root_->setValue(value);
 		return *this;
 
     }
@@ -35,9 +35,9 @@ public:
      * Add a leaf node to the top level of this tree.
      */
     Tree& addChild(T value){
-        NodePtr child = Node::Create();
-        child.setValue(value);
-        root_.append(std::move(child));
+        NodePtr child = Node::Create();    //create a new node
+        child->setValue(value);            // set its value
+        this->root_->append(child);        //add it to the tree
 		return *this;
     }
 
@@ -46,31 +46,32 @@ public:
      * semantics to "steal" the subtree's nodes.
      */
     Tree& addSubtree(Tree<T>&& sub_tree){
-		root_.append(std::move(sub_tree.root_));
+		this->root_->append(sub_tree.root_);
 		return *this;
 	}
 
+	/**
+	 * Print out the tree to verify the structure
+	*/
 	void printTree(){
-		if (this->root_.children_.empty()){
+		std::cout << "Root has value " << this->root_->getValue()<< std::endl;  // print root value
+		if (this->root_->isEmpty()){
 			std::cout << "root has no children" << std::endl;
 			return;
 		}
-		for (auto child : this->root_.children_){
-			child.printNode();
+
+		//print all children of the root
+		for (auto iter = this->root_->children_.begin(); iter != this->root_->children_.end(); ++iter){			
+    		(*iter)->printNode();	
+			std::cout << "" << std::endl;
 		}
 		return;
 	}
 
 
-
-
 private:
-	//
-	// NodePtr will be more convenient to use than std::unique_ptr<Node>.
-	// We can create this new type name with typedef or using, but first we
-	// need to forward-declare the Node type.
-	//
-	class Node;
+	//! Node class to represent tree nodes
+	class Node; // forward declaration
 	using NodePtr = std::unique_ptr<Node>;
 
 	class Node
@@ -81,27 +82,35 @@ private:
 			return std::make_unique<Node>();
 		}
 
+		//! Default constructor
 		Node(){}
-		
 
+		/** 
+		 * Set the node's value
+		*/
 		void setValue(T value)
 		{
 			value_ = std::move(value);
 		}
 
+		/** 
+		 * Get the node's value
+		*/
+		T getValue(){
+			return value_;
+		}
+
 		/**
 		 * Append a new node
 		 */
-		void append(NodePtr n)
+		void append(NodePtr& n)
 		{
 			// Add new node to this node's children
-			this->children_.push_back = std::move(n);
+			this->children_.push_back(std::move(n));
 		}
 
 		/**
 		 * Dereference operator: get this node's value.
-		 *
-		 * @pre    node is not a sentinel
 		 */
 		T& operator* ()
 		{
@@ -114,21 +123,34 @@ private:
 			return value_ < other.value_;
 		}
 
-		void printNode(){
-			std::cout << this->value_ << std::endl;
+		/**
+		 * Check if node is empty
+		*/
+		bool isEmpty(){
+			return children_.empty();
+		}
+
+		/**
+		 * Print a child and it's children to the terminal
+		*/
+		void printNode(){		
+			//Check if node has no children and return if so
 			if (this->children_.empty()){
+				std::cout << this->value_ << std::endl;
 				return;
 			}
-			for (auto child : this->children_){
-				child.printNode();
+			//iterate through all of the child's children recursively
+			for (auto iter = this->children_.begin(); iter != this->children_.end(); ++iter){
+    			std::cout << "node with value " << value_ << " has children with values: " << std::endl;
+				(*iter)->printNode();			
 			}
 			return;
 		}
-
+		std::list<NodePtr> children_;
 	private:
 		T		value_;
 
-		std::list<NodePtr> children_;
+		
 	};
 
 	NodePtr			root_;
