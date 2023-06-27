@@ -102,23 +102,20 @@ private:
 
 		bool contains(const T&) const;
 		Node& min(){
-            Node* current_min = &this;
-            find_min(this->left_);
-            find_min(this->right_);
-
-            return 
-
-            
+            Node* current_min = this;
+            current_min = find_min(this, current_min);
+            return current_min;            
         };
-        T find_min(Node& current_min){
-            if (current_min.left_ == nullptr && current_min.right_ == nullptr){
-                if (node.value() < current_min) {
-                    current_min = element_; //won't work for unique pointers
+
+        Node& find_min(Node* node, Node* current_min){
+            if (node->left_ == nullptr && node->right_ == nullptr){
+                if (node->value() < current_min->value()) {
+                    current_min = node; //won't work for unique pointers
                 }
             }
             current_min = find_min(node.left_, current_min);
             current_min = find_min(node.right_, current_min);
-            return current_min;
+            return &current_min;
         }
 
 		Node& max();
