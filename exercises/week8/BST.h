@@ -124,24 +124,24 @@ private:
 
         Node* find_min(Node* node, Node* current_min){
 			if (node == nullptr){
-				cout << "red" << endl;
+				//cout << "red" << endl;
 				return current_min;
 			}
 
 			if (node->value() < current_min->value()) {
-				cout << "white" << endl;
+				//cout << "white" << endl;
         		current_min = node;
     		}
     		Node* left_min = find_min(node->left_.get(), current_min);
     		Node* right_min = find_min(node->right_.get(), current_min);
 
     		if (left_min != nullptr && left_min->value() < current_min->value()) {
-    		    cout << "yellow" << endl;
+    		   // cout << "yellow" << endl;
 				current_min = left_min;
     		}
 
     		if (right_min != nullptr && right_min->value() < current_min->value()) {
-    		    cout << "black" << endl;
+    		    //cout << "black" << endl;
 				current_min = right_min;
     		}
 
@@ -156,24 +156,24 @@ private:
 
 		Node* find_max(Node* node, Node* current_max){
 			if (node == nullptr){
-				cout << "green" << endl;
+				//cout << "green" << endl;
 				return current_max;
 			}
    
    			if (node->value() > current_max->value()) {
-				cout << "blue" << endl;
+				//cout << "blue" << endl;
         		current_max = node;
     		}
     		Node* left_max = find_max(node->left_.get(), current_max);
     		Node* right_max = find_max(node->right_.get(), current_max);
 
     		if (left_max != nullptr && left_max->value() > current_max->value()) {
-    		    cout << "purple" << endl;
+    		    //cout << "purple" << endl;
 				current_max = left_max;
     		}
 
     		if (right_max != nullptr && right_max->value() > current_max->value()) {
-    		    cout << "pink" << endl;
+    		    //cout << "pink" << endl;
 				current_max = right_max;
     		}
 
@@ -195,7 +195,6 @@ private:
 	 * @param   value      the value to insert
 	 * @param   node       the root of the (sub-)tree being inserted into;
 	 *                     may be null if the (sub-)tree is empty
-	 * @todo not inserting larger numbers properly
 	 */
 	void insert(T &&value, std::unique_ptr<Node> &node){
 		if (value < node->value()){ 
@@ -210,7 +209,7 @@ private:
 				insert(std::move(value), node->left_);
 			}			
 		}
-		else if (node->value() > value){
+		else if (value > node->value()){
 			cout << "banana" << endl;
 			if (node->right_ == nullptr){
 				cout << "grape" << endl;
