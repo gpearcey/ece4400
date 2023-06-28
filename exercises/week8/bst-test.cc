@@ -17,18 +17,25 @@
 #include "BST.h"
 
 #include <iostream>
+using namespace std;
 
 int main()
 {
 	BinarySearchTree<int> bst;
+	cout << bst.empty() << endl;
+
 
 	bst.insert(4);
 	bst.insert(2);
-	bst.insert(7);
+	//bst.insert(2);
+	//bst.insert(7);
+	//bst.insert(1);
+	//bst.insert(99);
+	//bst.insert(3);
+	//bst.insert(-44);
 
-	std::cout << "min value: " << bst.min() << "\n";
 	std::cout << "max value: " << bst.max() << "\n";
-
+	std::cout << "min value: " << bst.min() << "\n";
 	//bst.print(std::cout);
 
 	return 0;
