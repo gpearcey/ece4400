@@ -11,10 +11,14 @@
 using namespace std;
 
 
+
 template<typename T>
 class Tree
 {
+private:
+	class Node; //forward declaration
 public:
+
 	//! Construct an empty tree.
 	Tree()
 	{
@@ -68,30 +72,28 @@ public:
 		return;
 	}
 
-	void visitPreorder(void (*func)(T)){
-		this->root_.visitPreorderNode(void (*func)(T));
-		T value = root_->getvalue();
-		funct(value);
 
-		for (child : children_){
-			child.visitPreorder(void (*func)(T));
-		}
+	//void visit(const T &value)
+	//{
+	//	static size_t i = 0;
+	//	std::cout << "Node " << i++ << ": " << value << "\n";
+	//}
+
+	void visitPreorder(void (*func)(const T&)){
+		this->root_->preorderNode(func);
 		
 	}
 
-	visitPreorderNode(void (*func)(T)){
-		T value = this->getValue;
-
-		if this->isEmpty()
+	void visitPostorder(void (*func)(const T&)){
+		this->root_->postorderNode(func);
+		
 	}
 
-	void visitPostorder(){
 
-	}
 
 private:
 	//! Node class to represent tree nodes
-	class Node; // forward declaration
+	 // forward declaration
 	using NodePtr = std::unique_ptr<Node>;
 
 	class Node
@@ -165,6 +167,31 @@ private:
 				(*iter)->printNode();			
 			}
 			return;
+		}
+
+
+		void preorderNode(void (*func)(const T&)){
+			if (this == nullptr){
+				return;
+			}
+
+			func(this->value_);
+
+			for (auto& child : this->children_){
+				child->preorderNode(func);
+			}
+		}
+
+		void postorderNode(void (*func)(const T&)){
+			if (this == nullptr){
+				return;
+			}			
+
+			for (auto& child : this->children_){
+				child->preorderNode(func);
+			}
+
+			func(this->value_);
 		}
 		std::list<NodePtr> children_;
 	private:

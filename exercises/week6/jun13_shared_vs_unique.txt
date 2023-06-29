@@ -1,6 +1,0 @@
-1. Discuss the merits of using std::shared_ptr vs std::unique_ptr to manage the ownership of child nodes in a tree.
-
-Multiple shared_ptr's can point to the same object, but you can't have multiple unique_ptr's pointing to the same object. 
-Child nodes in a tree only have one parent if ownership grows downward, so a unique pointer can be used because each 
-child will only have one node pointing to it. A unique_ptr is preffered because if forces only one parent to own a 
-child node, and doesn't have to maintain a count like shared_ptr. 

@@ -20,6 +20,12 @@
 Implement the BinarySearchTree::print method using a recursive Node::print method.
 */
 
+//TODO:
+// use comparator
+// print
+// remove
+//comment
+
 #include <cassert>
 #include <cstddef>      // for definition of size_t
 #include <functional>   // std::function

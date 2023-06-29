@@ -1,34 +1,34 @@
 #include "tree.h"
 
+template<typename T>
+void visit(const T &value)
+{
+	static size_t i = 0;
+	std::cout << "Node " << i++ << ": " << value << "\n";
+}
+
+
 int main() {
     Tree<int> t;
-    t.setRoot(1);
-    t.addChild(2);
-    t.addChild(3);
-
-    //t.printTree();
+    t.setRoot(2);
+    t.addChild(4);
+    t.addChild(5);
 
     Tree<int> t2;
-    t2.setRoot(4);
-    t2.addChild(5);
-    t.addSubtree(std::move(t2));
-
-    //t.printTree();
-
-    t.addChild(6);
+    t2.setRoot(3);
+    t2.addChild(6);
+    t2.addChild(7);
 
     Tree<int> t3;
-    t3.setRoot(7);
-    t3.addChild(8);
+    t3.setRoot(1);
+    t.addSubtree(std::move(t));
+    t.addSubtree(std::move(t2));
 
-    Tree<int> t4;
-    t4.setRoot(9);
-    t4.addChild(10);
 
-    t3.addSubtree(std::move(t4));
-    t.addSubtree(std::move(t3));
+    t3.visitPreorder(visit<int>);
+    t3.visitPostorder(visit<int>);
 
-    t.printTree();
+
 
     return 0;
 }
