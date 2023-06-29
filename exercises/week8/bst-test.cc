@@ -47,5 +47,7 @@ int main()
 
 	cout << "The max depth of this tree is " << bst.maxDepth() << endl;
 
+	bst.print();
+	
 	return 0;
 }

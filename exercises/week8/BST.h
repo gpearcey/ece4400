@@ -30,6 +30,7 @@ Implement the BinarySearchTree::print method using a recursive Node::print metho
 #include <functional>   // std::function
 #include <memory>       // std::unique_ptr
 #include <iostream>
+#include <vector>
 using namespace std;
 template<typename T, typename Comparator = std::less<T>>
 class BinarySearchTree
@@ -104,9 +105,19 @@ public:
 		return remove(value, root_);
 	}
 
-	//void print(){
-//
-	//}
+	void print(){
+		int depth = this->maxDepth();
+		std::vector<std::vector<T>> values_to_print;
+		values_to_print.resize(depth + 1); //root needs to be stored too
+		this->root_->print(values_to_print, depth);
+		for (int i = values_to_print.size() - 1; i >= 0; --i){
+			for (const T& value : values_to_print[i]){
+				cout << value << "  ";
+			}
+			cout << endl;
+		}
+	}
+
 
 private:
 	struct Node
@@ -193,9 +204,28 @@ private:
     		return current_max;
         }
 
-		//void print(Node* node){
-		//	if 
-		//}
+		int print(std::vector<std::vector<T>>& values_vec, int prev_height){
+			if (this ==  nullptr){
+				//cout << "water" << endl;
+				return prev_height;
+			}
+			//cout << "egg" << endl;
+			//int node_depth = this->maxDepth() - 1;
+			//cout << "node value is: " << this->value() << " and node depth is: " << node_depth << endl;
+
+			values_vec[prev_height].push_back(this->value());
+			//cout << "sugar" << endl;
+    		if (this->left_ != nullptr){
+				//cout << "cinnamon" << endl;
+				this->left_->print(values_vec, prev_height-1);
+			}   		    
+
+    		if (this->right_ != nullptr){
+				this->right_->print(values_vec, prev_height-1);
+			}    		    
+			//cout << "salt" << endl;
+			return prev_height;
+		}
 
 		T takeMin();
 		size_t maxDepth() const{
@@ -228,24 +258,24 @@ private:
 		if (compare_(value, node->value())){ 
 			//std::cout << "apple" << endl;
 			if (node->left_ == nullptr){
-				cout << "blueberry" << endl;
+				//cout << "blueberry" << endl;
 				std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
 				node->left_ = std::move(new_node);
 			}
 			else{
-				cout << "orange" << endl;
+				//cout << "orange" << endl;
 				insert(std::move(value), node->left_);
 			}			
 		}
 		else if (compare_(node->value(), value)){
-			cout << "banana" << endl;
+			//cout << "banana" << endl;
 			if (node->right_ == nullptr){
-				cout << "grape" << endl;
+				//cout << "grape" << endl;
 				std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
 				node->right_ = std::move(new_node);
 			}
 			else{
-				cout << "pie" << endl;
+				//cout << "pie" << endl;
 				insert(std::move(value), node->right_);
 			}
 			
