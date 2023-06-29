@@ -21,7 +21,6 @@ Implement the BinarySearchTree::print method using a recursive Node::print metho
 */
 
 //TODO:
-// use comparator
 // print
 // remove
 //comment
@@ -81,7 +80,7 @@ public:
 	const T& min() const
 	{
 		assert(root_);
-		return root_->min().value();
+		return root_->min(this->compare_).value();
 	}
 
 	/**
@@ -92,7 +91,7 @@ public:
 	const T& max() const
 	{
 		assert(root_);
-		return root_->max().value();
+		return root_->max(this->compare_).value();
 	}
 
 	/**
@@ -130,31 +129,31 @@ private:
 			return (this->left_->contains(value) || this->right_->contains(value));
 
 		}
-		Node& min(){
+		Node& min(const Comparator& compare){
             Node* current_min = this;
-            current_min = find_min(this, current_min);
+            current_min = find_min(this, current_min, compare);
             return *current_min;            
         };
 
-        Node* find_min(Node* node, Node* current_min){
+        Node* find_min(Node* node, Node* current_min, const Comparator& compare){
 			if (node == nullptr){
 				//cout << "red" << endl;
 				return current_min;
 			}
 
-			if (compare_(node->value(),current_min->value())) {
+			if (compare(node->value(),  current_min->value())) {
 				//cout << "white" << endl;
         		current_min = node;
     		}
-    		Node* left_min = find_min(node->left_.get(), current_min);
-    		Node* right_min = find_min(node->right_.get(), current_min);
+    		Node* left_min = find_min(node->left_.get(), current_min, compare);
+    		Node* right_min = find_min(node->right_.get(), current_min, compare);
 
-    		if (left_min != nullptr && left_min->value() < current_min->value()) {
+    		if (left_min != nullptr &&  compare(left_min->value(), current_min->value())) {
     		   // cout << "yellow" << endl;
 				current_min = left_min;
     		}
 
-    		if (right_min != nullptr && right_min->value() < current_min->value()) {
+    		if (right_min != nullptr &&  compare(right_min->value(), current_min->value())) {
     		    //cout << "black" << endl;
 				current_min = right_min;
     		}
@@ -162,31 +161,31 @@ private:
     		return current_min;
         }
 
-		Node& max(){
+		Node& max(const Comparator& compare){
             Node* current_max = this;
-            current_max = find_max(this, current_max);
+            current_max = find_max(this, current_max, compare);
             return *current_max;      
 		}
 
-		Node* find_max(Node* node, Node* current_max){
+		Node* find_max(Node* node, Node* current_max, const Comparator& compare){
 			if (node == nullptr){
 				//cout << "green" << endl;
 				return current_max;
 			}
    
-   			if (node->value() > current_max->value()) {
+   			if (compare(current_max->value(), node->value() )) {
 				//cout << "blue" << endl;
         		current_max = node;
     		}
-    		Node* left_max = find_max(node->left_.get(), current_max);
-    		Node* right_max = find_max(node->right_.get(), current_max);
+    		Node* left_max = find_max(node->left_.get(), current_max, compare);
+    		Node* right_max = find_max(node->right_.get(), current_max, compare);
 
-    		if (left_max != nullptr && left_max->value() > current_max->value()) {
+    		if (left_max != nullptr &&  compare(current_max->value(), left_max->value()) ) {
     		    //cout << "purple" << endl;
 				current_max = left_max;
     		}
 
-    		if (right_max != nullptr && right_max->value() > current_max->value()) {
+    		if ( right_max != nullptr && compare(current_max->value(),right_max->value() )) {
     		    //cout << "pink" << endl;
 				current_max = right_max;
     		}
@@ -226,7 +225,7 @@ private:
 	 *                     may be null if the (sub-)tree is empty
 	 */
 	void insert(T &&value, std::unique_ptr<Node> &node){
-		if (value < node->value()){ 
+		if (compare_(value, node->value())){ 
 			//std::cout << "apple" << endl;
 			if (node->left_ == nullptr){
 				cout << "blueberry" << endl;
@@ -238,7 +237,7 @@ private:
 				insert(std::move(value), node->left_);
 			}			
 		}
-		else if (value > node->value()){
+		else if (compare_(node->value(), value)){
 			cout << "banana" << endl;
 			if (node->right_ == nullptr){
 				cout << "grape" << endl;
@@ -267,6 +266,6 @@ private:
 	 */
 	bool remove(const T &value, std::unique_ptr<Node> &node);
 
-	Comparator compare_;
+    Comparator compare_;
 	std::unique_ptr<Node> root_;
 };
