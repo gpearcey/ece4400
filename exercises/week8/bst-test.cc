@@ -33,10 +33,19 @@ int main()
 	bst.insert(99);
 	bst.insert(3);
 	bst.insert(-44);
+	bst.insert(100);
+	bst.insert(101);
+	bst.insert(102);
 
 	std::cout << "max value: " << bst.max() << "\n";
 	std::cout << "min value: " << bst.min() << "\n";
+	
 	//bst.print(std::cout);
+
+	std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
+	std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
+
+	cout << "The max depth of this tree is " << bst.maxDepth() << endl;
 
 	return 0;
 }

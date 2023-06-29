@@ -43,7 +43,7 @@ public:
 			return 0;
 		}
 
-		return root_->maxDepth();
+		return root_->maxDepth()-1;
 	}
 
 	//! Is this tree empty?
@@ -55,18 +55,13 @@ public:
 	//! Insert a new value into the appropriate place in the tree.
 	void insert(T value)
 	{
-		cout << "1" << endl;
 		if (this->empty()){
-			cout << "2" << endl;
 			std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
 			this->root_ = std::move(new_node);
-			cout << "3" << endl;
 		}
 
 		else{
-			cout << "4" << endl;
 			insert(std::move(value), root_);
-			cout << "5" << endl;
 		}
 		
 		
@@ -104,6 +99,10 @@ public:
 		return remove(value, root_);
 	}
 
+	//void print(){
+//
+	//}
+
 private:
 	struct Node
 	{
@@ -115,7 +114,16 @@ private:
 
 		const T& value() const { return element_; }
 
-		bool contains(const T&) const;
+		bool contains(const T& value) const {
+			if (this == nullptr){
+				return false;
+			}
+			if (this->value() == value){
+				return true;
+			}
+			return (this->left_->contains(value) || this->right_->contains(value));
+
+		}
 		Node& min(){
             Node* current_min = this;
             current_min = find_min(this, current_min);
@@ -128,7 +136,7 @@ private:
 				return current_min;
 			}
 
-			if (node->value() < current_min->value()) {
+			if (compare_(node->value(),current_min->value())) {
 				//cout << "white" << endl;
         		current_min = node;
     		}
@@ -180,8 +188,23 @@ private:
     		return current_max;
         }
 
+		//void print(Node* node){
+		//	if 
+		//}
+
 		T takeMin();
-		size_t maxDepth() const;
+		size_t maxDepth() const{
+			if (this == nullptr){
+				return 0;
+			}
+			if (this->left_->maxDepth() > this->right_->maxDepth()){
+				return this->left_->maxDepth() + 1;
+			}
+
+			return this->right_->maxDepth() + 1;
+			
+		}
+
 
 		T element_;
 		size_t count_;
