@@ -68,7 +68,7 @@ public:
         
 		Iterator operator ++ (int){
             if (this->order_ == PreOrder){
-
+                this.PreOrder();
             }
             else if (this->order_ == InOrder){
 
