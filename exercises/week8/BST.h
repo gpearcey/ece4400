@@ -20,10 +20,6 @@
 Implement the BinarySearchTree::print method using a recursive Node::print method.
 */
 
-//TODO:
-// print
-// remove
-//comment
 
 #include <cassert>
 #include <cstddef>      // for definition of size_t
@@ -105,11 +101,21 @@ public:
 		return remove(value, root_);
 	}
 
+	/**
+	 * Prints the tree structure. 
+	 * 
+	 * Prints the root first, then it's children on the next line, then the children of it's children on the following line, and so on.
+	 * Iterates through the tree and places children in appropriate sub arrays based on node height, then prints each sub array. 
+	*/
 	void print(){
 		int depth = this->maxDepth();
+
 		std::vector<std::vector<T>> values_to_print;
-		values_to_print.resize(depth + 1); //root needs to be stored too
+
+		values_to_print.resize(depth + 1); //add one to include root
+
 		this->root_->print(values_to_print, depth);
+
 		for (int i = values_to_print.size() - 1; i >= 0; --i){
 			for (const T& value : values_to_print[i]){
 				cout << value << "  ";
@@ -148,24 +154,20 @@ private:
 
         Node* find_min(Node* node, Node* current_min, const Comparator& compare){
 			if (node == nullptr){
-				//cout << "red" << endl;
 				return current_min;
 			}
 
 			if (compare(node->value(),  current_min->value())) {
-				//cout << "white" << endl;
         		current_min = node;
     		}
     		Node* left_min = find_min(node->left_.get(), current_min, compare);
     		Node* right_min = find_min(node->right_.get(), current_min, compare);
 
     		if (left_min != nullptr &&  compare(left_min->value(), current_min->value())) {
-    		   // cout << "yellow" << endl;
 				current_min = left_min;
     		}
 
     		if (right_min != nullptr &&  compare(right_min->value(), current_min->value())) {
-    		    //cout << "black" << endl;
 				current_min = right_min;
     		}
 
@@ -180,24 +182,20 @@ private:
 
 		Node* find_max(Node* node, Node* current_max, const Comparator& compare){
 			if (node == nullptr){
-				//cout << "green" << endl;
 				return current_max;
 			}
    
    			if (compare(current_max->value(), node->value() )) {
-				//cout << "blue" << endl;
         		current_max = node;
     		}
     		Node* left_max = find_max(node->left_.get(), current_max, compare);
     		Node* right_max = find_max(node->right_.get(), current_max, compare);
 
     		if (left_max != nullptr &&  compare(current_max->value(), left_max->value()) ) {
-    		    //cout << "purple" << endl;
 				current_max = left_max;
     		}
 
     		if ( right_max != nullptr && compare(current_max->value(),right_max->value() )) {
-    		    //cout << "pink" << endl;
 				current_max = right_max;
     		}
 
@@ -206,24 +204,18 @@ private:
 
 		int print(std::vector<std::vector<T>>& values_vec, int prev_height){
 			if (this ==  nullptr){
-				//cout << "water" << endl;
 				return prev_height;
 			}
-			//cout << "egg" << endl;
-			//int node_depth = this->maxDepth() - 1;
-			//cout << "node value is: " << this->value() << " and node depth is: " << node_depth << endl;
 
 			values_vec[prev_height].push_back(this->value());
-			//cout << "sugar" << endl;
+
     		if (this->left_ != nullptr){
-				//cout << "cinnamon" << endl;
 				this->left_->print(values_vec, prev_height-1);
 			}   		    
 
     		if (this->right_ != nullptr){
 				this->right_->print(values_vec, prev_height-1);
 			}    		    
-			//cout << "salt" << endl;
 			return prev_height;
 		}
 
@@ -256,26 +248,20 @@ private:
 	 */
 	void insert(T &&value, std::unique_ptr<Node> &node){
 		if (compare_(value, node->value())){ 
-			//std::cout << "apple" << endl;
 			if (node->left_ == nullptr){
-				//cout << "blueberry" << endl;
 				std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
 				node->left_ = std::move(new_node);
 			}
 			else{
-				//cout << "orange" << endl;
 				insert(std::move(value), node->left_);
 			}			
 		}
 		else if (compare_(node->value(), value)){
-			//cout << "banana" << endl;
 			if (node->right_ == nullptr){
-				//cout << "grape" << endl;
 				std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
 				node->right_ = std::move(new_node);
 			}
 			else{
-				//cout << "pie" << endl;
 				insert(std::move(value), node->right_);
 			}
 			
@@ -294,7 +280,31 @@ private:
 	 * @param   node       the root of the (sub-)tree being inserted into;
 	 *                     may be null if the (sub-)tree is empty
 	 */
-	bool remove(const T &value, std::unique_ptr<Node> &node);
+	bool remove(const T &value, std::unique_ptr<Node> &node){
+		if (not node){
+			return false; //tree does not contain value
+		}
+		else if(compare_(value, node->element_)){
+			return remove(value, node->left_); //traverse left side
+		}
+		else if(compare_(node->element_, value)){
+			return remove(value, node->right_); //traverse right side
+		}
+		else if (node->count_ > 1){ //multiple nodes with same value, just decrement the count. 
+			node->count_--;
+			return true;
+		}
+		else if (node->left_ and node->right_){
+			//node has two children
+			T minOfMax = node->right_->min(compare_).element_;
+			remove(minOfMax, node->right_);
+			node->element_ = std::move(minOfMax);
+		}
+		else{
+			node.swap(node->left_ ? node->left_ : node->right_); //node has zero or one children
+		}
+		return true;
+	}
 
     Comparator compare_;
 	std::unique_ptr<Node> root_;

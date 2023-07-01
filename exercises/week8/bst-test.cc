@@ -39,8 +39,6 @@ int main()
 
 	std::cout << "max value: " << bst.max() << "\n";
 	std::cout << "min value: " << bst.min() << "\n";
-	
-	//bst.print(std::cout);
 
 	std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
 	std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
@@ -48,6 +46,22 @@ int main()
 	cout << "The max depth of this tree is " << bst.maxDepth() << endl;
 
 	bst.print();
+
+	bst.remove(99);
+
+	cout << "Tree after 99 removed: \n" << endl;
+	bst.print();
+
+	bst.remove(2);
+
+	cout << "Tree after 2 removed: \n" << endl;
+	bst.print();
+
 	
+	bst.insert(100);
+	bst.remove(100);
+
+	cout << "Tree after adding a second 100 and removing it \n" << endl;
+	bst.print();
 	return 0;
 }
