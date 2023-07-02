@@ -19,6 +19,9 @@
 #include <functional>   // std::function
 #include <memory>       // std::unique_ptr
 #include <stack>        // std::stack
+#include <iostream>
+
+using namespace std;
 
 template<typename T, typename Comparator = std::less<T>>
 class BinarySearchTree
@@ -65,18 +68,18 @@ public:
 		 * This operator method just calls private methods to try and
 		 * keep the logic of the various traversal mechanisms clear.
 		 */   
-        
 		Iterator operator ++ (int){
-            if (this->order_ == PreOrder){
-                this.PreOrder();
+			cout << "blue" << endl;
+            if (this->order_ == Traversal::PreOrder){
+				this->PreOrder();
             }
-            else if (this->order_ == InOrder){
+            else if (this->order_ == Traversal::InOrder){
 
             }
-            else if (this->order == PostOrder){
+            else if (this->order_ == Traversal::PostOrder){
 
             }
-            return this;
+            return *this;
         }
 
 		//! Dereference the iterator at its current position
@@ -85,56 +88,61 @@ public:
         }
 
 		//! Is this iterator *not* the same as another?
-		bool operator != (const Iterator &other);
+		bool operator != (const Iterator &other){
+			if (this->iterator_node_ == other.iterator_node_){
+				return false;
+			}
+			return true;
+		}
 
 		// add whatever else you need here
-        std::stack<std::unique_ptr<Node>> nodes_;
+        std::stack<Node*> nodes_;
         Node* node_pointer_;
+		Node* iterator_node_;
         Traversal order_;
 
     private:
-        PreOrder(){
-            nodes_.push(node_pointer_);
-                if (node_pointer_->left_ == nullptr && node_pointer_->right_ == nullptr){ //if node has no children
-                    nodes_.pop();
-                    if (nodes_.front()->left_ == this->node_pointer_){
-                        //this node is the left child
-                        if (nodes_.front()->right){
-                            //if the parent node has a right child
-                            node_pointer_ = nodes_.front(); //set the pointer to the right child
-                            nodes_.push(node_pointer_); // add the right child to the stack
-                            return this;
-                        }
-                        PreOrder(this); //recurse up the tree
-                    }
-                    else if (nodes_.front()->right_ == this->node_pointer_){
-                        //this node is the right child
-                        if(nodes_.size() == 1){
-                            //we've reached the end
-                            return nullptr;
-                        }
-                        PreOrder(nodes_.front()); //recurse up the tree
-                    }
-                }
-                else if(node_pointer_->left_ == nullptr){
-                    //node only has a right child
-                    node_pointer_ = node_pointer_->right_; //go to the right child
-                    nodes_.push(node_pointer_);
-                    return this;
-                }
-                else if(node_pointer_->right_ == nullptr){
-                    //node only has a left child
-                    node_pointer_ = node_pointer_->left_; //go to the left child
-                    nodes_.push(node_pointer_);
-                    return this;
-                }
-                else if(node_pointer_->left != nullptr and node_pointer->right_ != nullptr){
-                    // node has 2 children
-                    node_pointer_ = node_pointer->left; //go to the left child
-                    nodes_.push(node_pointer_);
-                    return this;
-                }
-        }
+        void PreOrder(){
+			bool node_incremented = false;
+			cout << "grapes" << endl;
+			while (!node_incremented){
+				if(nodes_.empty() == true && node_pointer_ == nullptr){
+					//we've iterated through the entire tree
+					cout << "finished iterating" << endl;
+					iterator_node_ = nullptr;
+					return;
+				}
+
+				if (node_pointer_ != nullptr){
+					node_incremented = true;
+					iterator_node_ = node_pointer_;
+					nodes_.push(node_pointer_);
+					node_pointer_ = node_pointer_->left_.get();
+				}
+				else {
+					cout << "zebra" << endl;
+					Node* prev_node = nodes_.top();
+					cout << "apple" << endl;
+					nodes_.pop(); 
+					cout << "banana" << endl;
+					node_pointer_ = prev_node->right_.get();
+					cout << "carrot" << endl;
+				}
+			}
+			printStack(nodes_);
+			return;
+		}
+
+		void printStack(std::stack<Node*> node_stack){
+			cout << "printing stack" << endl;
+			while ( node_stack.empty() == false){
+				cout << node_stack.top()->element_<< endl;
+				node_stack.pop();
+			}
+			cout << "end of stack " << endl;
+		}
+
+        
 
 
 	};
@@ -149,11 +157,13 @@ public:
         Iterator iter;
         iter.order_ = order;
         if (order == Traversal::PreOrder){
-            iter.node_pointer_ = this->root_;
+            iter.node_pointer_ = this->root_.get();
+			iter.iterator_node_ = this->root_.get();
         }
         else if (order == Traversal::InOrder){
 
         }
+		return iter;
     }
     /**
      * The end of a tree traversal.
@@ -163,10 +173,12 @@ public:
      * pre-, in- or post-order.
      */
 	Iterator end(){
-        return nullptr;
+		Iterator iter;
+		iter.iterator_node_ = nullptr;
+        return iter;
     }
 
-private:
+public:
 	struct Node
 	{
 		Node(T value) : element_(std::move(value))
@@ -205,6 +217,10 @@ private:
 
 				right_->dot(o);
 			}
+
+			//Node* get(){
+			//	return 
+			//}
 		}
 
 		T element_;
