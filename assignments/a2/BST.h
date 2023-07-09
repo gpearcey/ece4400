@@ -268,17 +268,16 @@ public:
 			//       it will produce valid Dot output even when the
 			//       node values are things like money (e.g., $17)
 
-			o
-				<< "  \"" << this << "\""
-				<< " [ label = \"" << element_ << "\" ];\n";
+			o	<< "  \"" << this << "\""
+			  << " [ label = \"" << element_ << "\" ];\n";
 
 			if (left_)
 			{
-				o
-					<< "  \"" << this << "\""
-					<< " -> "
-					<< "\"" << left_.get() << "\""
-					<< " [ label = \"L\" ]\n";
+				
+				o   << "  \"" << this << "\""
+				   << " -> "
+				   << "\"" << left_.get() << "\""
+				   << " [ label = \"L\" ]\n";
 
 				left_->dot(o);
 			}

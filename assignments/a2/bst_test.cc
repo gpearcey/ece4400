@@ -5,27 +5,27 @@ using namespace std;
 
 /* Checking Preorder with integers*/
 
-//int main(){
-//	// Create a tree of integers:
-//	BinarySearchTree<int> t;
-//
-//	// Fancy way of not having to write BinarySearchTree<int> twice:
-//	const auto Order = decltype(t)::Traversal::PreOrder;
-//
-//	//// Insert the values 4, 2, 6, 1, 3, 5 and 7:
-//	for (int n : { 4, 2, 6, 1, 3, 5, 7 })
-//	{
-//		t.insert(n);
-//	}
-//
-//	//// The following should print: 1234567
-//	for (auto i = t.begin(Order); i != t.end(); i++)
-//	{
-//		cout << *i << " ";
-//	}
-//	cout << "\n" ;
-//};
-//
+int main(){
+	// Create a tree of integers:
+	BinarySearchTree<int> t;
+
+	// Fancy way of not having to write BinarySearchTree<int> twice:
+	const auto Order = decltype(t)::Traversal::PreOrder;
+
+	//// Insert the values 4, 2, 6, 1, 3, 5 and 7:
+	for (int n : { 4, 2, 6, 1, 3, 5, 7 })
+	{
+		t.insert(n);
+	}
+
+	//// The following should print: 1234567
+	for (auto i = t.begin(Order); i != t.end(); i++)
+	{
+		cout << *i << " ";
+	}
+	cout << "\n" ;
+};
+
 
 /* Checking Preorder with unique pointers */
 
@@ -118,38 +118,38 @@ int main(){
 
 /* Checking PostOrder Traversal*/
 
-int main(){
-
-
-	BinarySearchTree<int> t;
-
-	const auto Order = decltype(t)::Traversal::PostOrder;
-
-	for (int n : { 4, 2, 6, 1, 3, 5, 7 })
-	{
-		t.insert(n);
-	}
-
-	for (auto i = t.begin(Order); i != t.end(); i++)
-	{
-		cout << *i << " ";
-	}
-	cout << "\n" ;
-
-	BinarySearchTree<int> t1;
-
-	const auto Order1 = decltype(t1)::Traversal::PostOrder;
-
-	for (int n : { 3, 2, 1, 0, 5, 4, 6 })
-	{
-		t1.insert(n);
-	}
-
-	for (auto j = t1.begin(Order1); j != t1.end(); j++)
-	{
-		cout << *j << " ";
-	}
-	cout << "\n" ;
+//int main(){
+//
+//
+//	BinarySearchTree<int> t;
+//
+//	const auto Order = decltype(t)::Traversal::PostOrder;
+//
+//	for (int n : { 4, 2, 6, 1, 3, 5, 7 })
+//	{
+//		t.insert(n);
+//	}
+//
+//	for (auto i = t.begin(Order); i != t.end(); i++)
+//	{
+//		cout << *i << " ";
+//	}
+//	cout << "\n" ;
+//
+//	BinarySearchTree<int> t1;
+//
+//	const auto Order1 = decltype(t1)::Traversal::PostOrder;
+//
+//	for (int n : { 3, 2, 1, 0, 5, 4, 6 })
+//	{
+//		t1.insert(n);
+//	}
+//
+//	for (auto j = t1.begin(Order1); j != t1.end(); j++)
+//	{
+//		cout << *j << " ";
+//	}
+//	cout << "\n" ;
 	
 
 	//BinarySearchTree<unique_ptr<int>> t1;
@@ -176,6 +176,6 @@ int main(){
 	//	cout << *(*i) << " ";
 	//}
 	//cout << "\n" ;
-	return 0;
-}
+//	return 0;
+//}
 
