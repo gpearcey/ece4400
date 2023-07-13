@@ -545,6 +545,7 @@ public:
 		int height_;
 		std::unique_ptr<Node> left_;
 		std::unique_ptr<Node> right_;
+		int bf_;
 	};
 private:
 	/**
@@ -554,11 +555,13 @@ private:
 	 * @param   node       the root of the (sub-)tree being inserted into;
 	 *                     may be null if the (sub-)tree is empty
 	 */
-	void insert(T &&value, std::unique_ptr<Node> &node){
+	int insert(T &&value, std::unique_ptr<Node> &node){
 		if (compare_(value, node->value())){ 
 			if (node->left_ == nullptr){
 				std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
+				new_node_->bf_ = 0;
 				node->left_ = std::move(new_node);
+				return 0;
 			}
 			else{
 				insert(std::move(value), node->left_);
@@ -568,6 +571,7 @@ private:
 			if (node->right_ == nullptr){
 				std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
 				node->right_ = std::move(new_node);
+				return 0;
 			}
 			else{
 				insert(std::move(value), node->right_);
@@ -578,7 +582,8 @@ private:
 			node->count_++;
 		}
 
-		this->root_->updateHeights();
+		node->bf_ = abs(left) - abs(right)
+		//this->root_->updateHeights();
 
 		return;
 	}

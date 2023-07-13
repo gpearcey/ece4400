@@ -1,3 +1,9 @@
+# Notes
+
+Multiple trees are called a forest.
+
+Every node only has one parent. 
+
 # Tree Structures
 
 Trees can have a vector of pointers to children:
