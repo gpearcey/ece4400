@@ -1,0 +1,9 @@
+July 10
+
+1. A DAG is a directed acyclic graph. It is a directed graph without any cycles
+
+2. IF a graph has n vertices, and can have maximum of m edges, then adding 
+a vertex adds n to the maximum number of edges. 
+
+The formula for n can be worked out to m = (n*(n-1)/2)
+
