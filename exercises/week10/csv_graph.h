@@ -54,17 +54,6 @@ public:
         }
         cout << endl;
     }
-
-    struct Vertex
-    {
-        T town_;
-        double dist_fr_prev_vertex_;
-        Vertex* next_;
-    };
-
-    struct Edge
-    {
-        T start_vertex;
         T end_vertex;
         double distance;
     };
