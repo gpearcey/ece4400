@@ -12,11 +12,14 @@ int main()
 		t.insert(n);
 	}
 
-	for (auto i = t.begin(); i != t.end(); ++i)
-	{
-		cout << *i << "gfhs ";
-	}
-	cout << "\n" ;
+	auto i = t.begin();
+	cout << *i << "\n";
+
+	//for (auto i = t.begin(); i != t.end(); ++i)
+	//{
+	//	cout << *i << "\n";
+	//}
+	//cout << "\n" ;
 	
 
     //Set<unique_ptr<int>> t1;

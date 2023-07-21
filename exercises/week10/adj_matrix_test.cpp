@@ -16,8 +16,6 @@ int main()
     int v3 = g.addVertex(0);
     int v4 = g.addVertex(0);
 
-    
-
     g.addEdge(v0,v0,1);
     g.addEdge(v1,v0,1);
     g.addEdge(v3,v4,1);

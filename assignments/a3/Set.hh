@@ -36,11 +36,344 @@
 
 using namespace std;
 
+
+template<typename M>
+class Stack
+{
+public:
+	class Node_s; //forward declaration
+
+	//! An iterator over the list
+	class iterator_s
+	{
+	public:
+		/**
+		 * The dereference operator.
+		 *
+		 * @returns   a reference to the "current" element
+		 */
+		M operator*(){
+			return this->node_pointer_->getValue();
+		};
+
+		/**
+		 * Pre-increment operator (i.e., `++i`).
+		 *
+		 * This method increments the iterator and then returns a
+		 * reference to the newly-incremented iterator.
+		 *
+		 * @returns   a reference to this iterator, after incrementing
+		 */
+		iterator_s& operator++(){
+			if (node_pointer_){
+				this->node_pointer_ = this->node_pointer_->getNext();
+			}			
+			return *this;			
+		};
+
+		/**
+		 * Post-increment operator (i.e., `i++`).
+		 *
+		 * This method returns a copy of this iterator as it currently
+		 * is (i.e., pointing where it currently points) and _then_
+		 * increments itself.
+		 *
+		 * @param     ignored   this is only used to distinguish the two
+		 *                      increment operators (pre- and post-)
+		 *                      from each other: its value should be
+		 *                      ignored
+		 *
+		 * @returns   an iterator to the previously-current element
+		 */
+		iterator_s operator++(int ignored){
+			iterator_s i = *this;
+            ++*this;						
+			return i;
+		}
+
+		//! Is this iterator pointing at the same place as another one?
+		bool operator== (const iterator_s& other) const{
+			if (this->node_pointer_ == other.node_pointer_){
+				return true;
+			}
+			else{
+				return false;
+			}
+		};
+
+		//! Is this iterator pointing at a different place from another?
+		bool operator!= (const iterator_s& other) const{
+			if (this->node_pointer_ == other.node_pointer_){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+
+		Node_s* node_pointer_;		
+	};
+
+
+	//! Default constructor
+	Stack(){
+		head_ = std::make_unique<Node_s>();
+	};
+
+	//! Copy constructor
+	Stack(const Stack& other){
+		head_ = std::make_unique<Node_s>();
+		this->head_ = std::make_unique<Node_s>(*other.head_);
+
+	};
+
+	//! Move constructor
+	Stack(Stack&& other){
+		head_ = std::make_unique<Node_s>();
+		if (this != &other) {
+			this->head_->next_ = std::move(other.head_->next_);
+		}
+	};
+
+	//! Destructor
+	~Stack(){};
+
+	//! Copy assignment operator
+	Stack& operator= (const Stack& other){
+        this->head_ = std::make_unique<Node_s>(*other.head_);
+		return *this;
+	}
+
+	//! Move assignment operator
+	Stack& operator= (Stack&& other){
+		if (this != &other) {
+			this->head_->next_ = std::move(other.head_->next_);
+		}
+		return *this;
+	};
+
+
+	//
+	// Accessors:
+	//
+	//! How many elements are in this list?
+	size_t size() const{
+
+		int count = 0;
+		if (head_->getNext() == nullptr){
+			count = 0;
+		}else{
+			//traverse through the list until the last node is reached
+			Node_s* current_node = head_->getNext();
+			while (current_node->getNext() != nullptr){
+				current_node = current_node->getNext();
+				count++;
+			}
+			count++;
+		}
+		return count;
+	
+	}
+
+	//! Is this list empty?
+	bool empty() const{
+		if (head_->getNext() == nullptr){
+			return true;
+		}
+		else{
+			return false;
+		}
+	};
+
+	//! Get an iterator to the beginning of the list
+	iterator_s begin(){
+		iterator_s i;
+		i.node_pointer_ = this->head_->getNext();
+		return i;
+
+	};
+
+	//! Get an iterator just past the end of the list
+	iterator_s end(){
+		iterator_s i;
+		//set last node to point to the new node
+
+		if (head_->getNext() == nullptr){
+			i.node_pointer_ = head_.get();
+		}else{
+			//traverse through the list until the last node is reached
+			Node_s* current_node = head_->getNext();
+			while (current_node->getNext() != nullptr){
+				current_node = current_node->getNext();
+			}
+			//set the last node to point to the new node
+			i.node_pointer_ = current_node->getNext();
+		}
+		return i;
+	}
+
+
+	//
+	// Mutators:
+	//
+
+	//! Copy an element to the front of the list
+	void push(const M& value){
+
+		//create new node
+		std::unique_ptr<Node_s> new_node = std::make_unique<Node_s>(value);
+		
+		//set new node's next pointer to the node that used to be at the front if list is not empty
+		if (head_->getNext() != nullptr){	
+			new_node->setNext(this->head_->next_);
+		}
+
+		//set the head to point to the new node
+		this->head_->setNext(new_node);
+		cout << value << endl;
+		return;
+	};
+
+	//! Move an element to the front of the list
+	void push(M&& value){
+		std::unique_ptr<Node_s> new_node = std::make_unique<Node_s>(std::move(value));		
+
+		//set new node's next pointer to the node that used to be at the front if list is not empty
+		if (head_->getNext() != nullptr){	
+			new_node->setNext(this->head_->next_);
+		}
+
+		//set the head to point to the new node
+		this->head_->setNext(new_node);
+		return;
+	};
+
+	//! Copy an element to the back of the list
+	M top(){
+
+		M ret;
+
+		if (this->empty()){
+			std::cout << "Stack is empty" << std::endl;
+			return nullptr;
+		}
+
+		if (head_->getNext() == nullptr){ 
+			return nullptr;
+
+		}else if(head_->getNext()->getNext() == nullptr) {
+			ret = head_->getNext()->getValue();
+		}
+		else{
+			//traverse through the list until the last node is reached
+			Node_s* current_node = head_->getNext();
+			while (current_node->getNext()->getNext() != nullptr){
+				current_node = current_node->getNext();
+			}
+			//set the second last node's next node to to null to remove the last node
+			M ret = current_node->getNext()->getValue();
+		}
+
+		return ret;
+	};
+
+	//! Copy an element to the back of the list
+	void pop(){
+
+		if (this->empty()){
+			std::cout << "Stack is empty" << std::endl;
+			return;
+		}
+
+		if (head_->getNext() == nullptr){ 
+			return;
+
+		}else if(head_->getNext()->getNext() == nullptr) {
+			head_->getNext()->next_ = nullptr;
+		}
+		else{
+			//traverse through the list until the last node is reached
+			Node_s* current_node = head_->getNext();
+			while (current_node->getNext()->getNext() != nullptr){
+				current_node = current_node->getNext();
+			}
+			//set the second last node's next node to to null to remove the last node
+			current_node->next_ = nullptr;
+		}
+
+		return;
+	};
+
+
+
+
+	//! Represents a list element - contains a value and a pointer to the next element
+	class Node_s{
+	public:
+		//! Default constructor
+		Node_s() : next_(nullptr){};
+
+		//! Constructor to initialize with a value
+		Node_s(M value) : value_(std::move(value)), next_(nullptr){};
+
+		//! Copy constructor
+		Node_s(const Node_s& other): value_(other.value_), next_(nullptr){
+    		if (other.next_) {
+    		    next_ = std::make_unique<Node_s>(*other.next_);
+    		}
+		};
+
+		//! Move constructor
+		Node_s(Node_s&& other) : value_(std::move(other.value_)), next_(nullptr){
+    		if (other.next_) {
+    		    next_ = std::move(other.next_);
+    		}
+		};
+
+		//
+		// Accessors:
+		//
+		M getValue(){
+			return value_;
+		};
+
+		Node_s* getNext(){
+			return next_.get();
+		};
+
+		//
+		// Mutators:
+		//		
+		void setValue(M value){
+			value_ = std::move(value);
+			return;
+		};
+		
+		void setNext(std::unique_ptr<Node_s>& next_node){
+			next_ = std::move(next_node);
+			return;
+		};
+
+		//! Destructor
+		~Node_s(){};
+
+		// Pointer to next element
+		std::unique_ptr<Node_s> next_;
+
+	private:
+		// Value of element
+		M value_;
+		
+	};
+private:
+	// Represents the head of the list
+	std::unique_ptr<Node_s> head_;
+};
+
 /**
  * A set that holds values, ignoring duplicates.
  * 
  * Todo:
- * @todo get rid of std::less
  * @todo get rid of std::stack
  * @todo copy constructor
  * @todo move constructor
@@ -49,7 +382,6 @@ using namespace std;
  * @todo union
  * @todo find
  * @todo const find
- * @todo find out if we need to be able to do union and intersection on different types
  * 
  * 
  */
@@ -104,9 +436,7 @@ public:
     }
 
 	//! Compute our intersection with another set.
-	Set<T> intersection(const Set<T>& other){
-        
-    }
+	Set<T> intersection(const Set<T>& other) UNIMPLEMENTED
 
 	//! Compute our union with another set.
 	Set<T> setUnion(const Set<T>&) UNIMPLEMENTED
@@ -135,7 +465,7 @@ public:
 			return false; //node is the same
 		}
 
-        std::stack<Node *> nodes_;
+        Stack<Node*> nodes_;
 		Node *node_pointer_;
 		Node *current_node_;
 		Node *previous_node_;
@@ -159,7 +489,7 @@ public:
 				if (node_pointer_ != nullptr)
 				{
 					// move to the left child
-					nodes_.push(node_pointer_);
+					nodes_.push(&node_pointer_);
 					node_pointer_ = node_pointer_->left_.get();
 				}
 				else
@@ -199,7 +529,7 @@ public:
 			return false; //node is the same
 		}
 
-        std::stack<Node *> nodes_;
+        Stack<Node*> nodes_;
 		Node *node_pointer_;
 		Node *current_node_;
 		Node *previous_node_;
