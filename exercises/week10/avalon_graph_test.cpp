@@ -12,13 +12,19 @@ int main()
 {
 	Graph<std::string, double> g;
 
-    int v0 = g.addVertex("SJ");
-    int v1 = g.addVertex("PC");
-    int v2 = g.addVertex("P");
-    int v3 = g.addVertex("CBS");
     int v4 = g.addVertex("BB");
+    int v3 = g.addVertex("CBS");
     int v5 = g.addVertex("G");
     int v6 = g.addVertex("H");
+    int v2 = g.addVertex("P");
+    int v1 = g.addVertex("PC");
+    int v0 = g.addVertex("SJ");
+
+
+
+    
+
+
 
     g.addEdge(v0,v1,14.2);
     g.addEdge(v1,v0,14.2);

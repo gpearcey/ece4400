@@ -75,7 +75,7 @@ private:
 		for (auto& row : adj_matrix_) {
         	row.push_back(E());
     	}
-		std::vector<int> new_row((num_verticies_+1), E());
+		std::vector<E> new_row((num_verticies_+1), E());
 		adj_matrix_.push_back(new_row);
 
 		return;

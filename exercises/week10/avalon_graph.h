@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -41,11 +42,83 @@ public:
 	void printGraph(){
 		for (auto& i : adj_matrix_){
 			for (auto j : i){
-				std::cout << j;
+				std::cout << j << " ";
 			}
 			std :: cout << "\n";
 		}
 		return;
+	}
+
+	E getDistance(VertexID start, VertexID end){
+	// Set up table of distances and paths
+
+	for (Vertex v : verticies_list_){
+		v.dist_ = 0;
+		v.done_ = false;
+	}
+
+	// The distance from the start vertex to itself is 0
+	start.dist_ = 0;
+
+	while (verticiesNotDone())
+	{
+		Vertex v = verticies_list_[smallestDistance()];
+
+		for (int i; i = 0; i<adj_matrix_.size()){
+			Vertex n = verticies_list_(i);
+			if (!n.done_){
+				// How long is the path through v to this neighbour?
+				distance = v.dist_ + adj_matrix_[v.id_][i];
+			}
+		}
+	}
+# Iterative algorithm:
+while |vertices with done=F| > 0
+    # Pick a vertext to work on:
+    v = smallest-distance vertex with done=F
+
+    # Consider each edge:
+    for each e in v.edges
+        # Pick a vertex from our {list, BST, heap...}
+        neighbour = other vertex of e
+
+        # Have we already finished exploring the neighbour vertex?
+        if ¬neighbour.done
+            # How long is the path through v to this neighbour?
+            distance through v = v.distance + e.distance
+
+            # Is the path through v better than what we have now?
+            if neighbour.distance > distance through v
+                # Set neighbour.distance and (possibly) update the
+                # data structure holding not-yet-done vertices
+                update neighbour.distance to distance through v
+
+                # The new shortest path to neighbour goes through v
+                neighbour.path = v
+	}
+
+	bool verticiesNotDone(){
+		for (Vertex v : verticies_list_)
+		{
+			if (v.done_ == false){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	VertexID smallestDistance(){
+		E smallest_dist = verticies_list[0].dist_;
+		VertexID id = verticies_list[0].id_;
+		for (Vertex v : verticies_list_)
+		{
+			if(v.dist_ < smallest_dist)
+			{
+				smallest_dist = v.dist_;
+				id = v.id_;
+			}
+		}
+		return id;
 	}
 
 private:
@@ -65,6 +138,9 @@ private:
 
 		V element_;
 		size_t id_;
+		size_t path_;
+		E dist_;
+		bool done_;
 	};
 
 	void updateMatrix(){
@@ -76,7 +152,7 @@ private:
 		for (auto& row : adj_matrix_) {
         	row.push_back(E());
     	}
-		std::vector<int> new_row((num_verticies_+1), E());
+		std::vector<E> new_row((num_verticies_+1), -1);
 		adj_matrix_.push_back(new_row);
 
 		return;
