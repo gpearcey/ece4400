@@ -1,25 +1,46 @@
 #include <iostream>
-#include "Set.hh"
+#include "Set_iterative.hh"
 
 using namespace std;
+//testing stack
+/*
+int main()
+{
+	
+	Stack<int> s;
+
+	s.push(5);
+	s.push(3);
+	s.push(8);
+
+	for (auto i = s.begin(); i != s.end(); ++i)
+	{
+		cout << *i << "\n";
+	}
+	std::cout << s.top() << std::endl;
+	s.pop();
+	std::cout << s.top() << std::endl;
+	cout << "\n" ;
+}*/
+
 
 int main()
 {
 	Set<int> t;
 
-	for (int n : { 4, 2, 6, 1, 3, 5, 7 })
+	for (int n : { 4,2,1,9,8,4354,54,42,41,90 })
 	{
 		t.insert(n);
 	}
 
-	auto i = t.begin();
-	cout << *i << "\n";
+	//auto i = t.begin();
+	//cout << *i << "\n";
 
-	//for (auto i = t.begin(); i != t.end(); ++i)
-	//{
-	//	cout << *i << "\n";
-	//}
-	//cout << "\n" ;
+	for (auto i = t.begin(); i != t.end(); ++i)
+	{
+		cout << *i << "\n";
+	}
+	cout << "\n" ;
 	
 
     //Set<unique_ptr<int>> t1;
