@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Set_iterative.hh"
+#include "Set.hh"
 
 using namespace std;
 //testing stack
@@ -27,45 +27,79 @@ int main()
 int main()
 {
 	Set<int> t;
-
-	for (int n : { 4,2,1,9,8,4354,54,42,41,90 })
+	for (int i = 50; i<151;i++)
 	{
-		t.insert(n);
+		t.insert(i);
+	}
+	Set<int> t2;
+	for (int j = 100; j<201;j++)
+	{
+		t2.insert(j);
 	}
 
-	//auto i = t.begin();
-	//cout << *i << "\n";
-
-	for (auto i = t.begin(); i != t.end(); ++i)
+	Set<int> t3 = t.intersection(t2);
+	for (auto i = t3.begin(); i != t3.end(); ++i)
 	{
 		cout << *i << "\n";
 	}
-	cout << "\n" ;
-	
 
-    //Set<unique_ptr<int>> t1;
-//
-//
-	//std::unique_ptr<int> ptr0(new int(9));
-	//std::unique_ptr<int> ptr1(new int(3));
-	//std::unique_ptr<int> ptr2(new int(4));
-	//std::unique_ptr<int> ptr3(new int(0));
-	//std::unique_ptr<int> ptr4(new int(1));
-	//std::unique_ptr<int> ptr5(new int(32));
-	//std::unique_ptr<int> ptr6(new int(17));
-	//t1.insert(std::move(ptr3));
-	//t1.insert(std::move(ptr5));
-	//t1.insert(std::move(ptr2));
-	//t1.insert(std::move(ptr4));
-	//t1.insert(std::move(ptr6));
-	//t1.insert(std::move(ptr1));
-	//t1.insert(std::move(ptr0));
-//
-	//for (auto i = t1.begin(); i != t1.end(); ++i)
+	t3.remove(133);
+	for (auto i = t3.begin(); i != t3.end(); ++i)
+	{
+		cout << *i << "\n";
+	}
+
+	auto k = t3.find(100);
+	cout << *k << endl;
+	//for (int n : {5,4,2})
 	//{
-	//	cout << *(*i) << " ";
+	//	t2.insert(n);
+	//}
+	//t2.insert(5);
+	//Set<int> t3 = t.setUnion(t2);
+//
+	////auto i = t.begin();
+	////cout << *i << "\n";
+//
+	//for (auto i = t3.begin(); i != t3.end(); ++i)
+	//{
+	//	cout << *i << "\n";
+	//}
+	//auto h = t3.find(5);
+	//cout << *h << endl;
+	//cout << "\n" ;
+	//
+	//Set<int> t2 = t;
+//
+//
+	////for (auto j = t2.begin(); j != t2.end(); ++j)
+	////{
+	////	cout << *j << "\n";
+	////}
+	////cout << "\n" ;
+//
+	//Set<int> t3 = std::move(t2);
+	//for (auto j = t3.begin(); j != t3.end(); ++j)
+	//{
+	//	cout << *j << "\n";
 	//}
 	//cout << "\n" ;
+	//cout << t3.contains(5438) << endl;
+//
+	Set<std::basic_string<char>> s;
+	s.insert("grace");
+	s.insert("mike");
+	s.insert("madison");
+	s.insert("abby");
+	auto i = s.find("abby");
+	for (auto i = s.find("grace"); i != s.end(); ++i)
+	{
+		cout << *i << "\n";
+	}
+	const auto j = s.find("grace");
+
+	//cout << *j << endl;
+//
 	return 0;
 
     //CheckInt(22, *s.find(22));

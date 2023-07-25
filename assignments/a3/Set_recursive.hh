@@ -36,296 +36,6 @@
 
 using namespace std;
 
-
-template<typename M>
-class Stack
-{
-public:
-	class Node_s; //forward declaration
-
-	//! An iterator over the list
-	class iterator_s
-	{
-	public:
-		/**
-		 * The dereference operator.
-		 *
-		 * @returns   a reference to the "current" element
-		 */
-		M operator*(){
-			return this->node_pointer_->getValue();
-		};
-
-		/**
-		 * Pre-increment operator (i.e., `++i`).
-		 *
-		 * This method increments the iterator and then returns a
-		 * reference to the newly-incremented iterator.
-		 *
-		 * @returns   a reference to this iterator, after incrementing
-		 */
-		iterator_s& operator++(){
-			if (node_pointer_){
-				this->node_pointer_ = this->node_pointer_->getNext();
-			}			
-			return *this;			
-		};
-
-		/**
-		 * Post-increment operator (i.e., `i++`).
-		 *
-		 * This method returns a copy of this iterator as it currently
-		 * is (i.e., pointing where it currently points) and _then_
-		 * increments itself.
-		 *
-		 * @param     ignored   this is only used to distinguish the two
-		 *                      increment operators (pre- and post-)
-		 *                      from each other: its value should be
-		 *                      ignored
-		 *
-		 * @returns   an iterator to the previously-current element
-		 */
-		iterator_s operator++(int ignored){
-			iterator_s i = *this;
-            ++*this;						
-			return i;
-		}
-
-		//! Is this iterator pointing at the same place as another one?
-		bool operator== (const iterator_s& other) const{
-			if (this->node_pointer_ == other.node_pointer_){
-				return true;
-			}
-			else{
-				return false;
-			}
-		};
-
-		//! Is this iterator pointing at a different place from another?
-		bool operator!= (const iterator_s& other) const{
-			if (this->node_pointer_ == other.node_pointer_){
-				return false;
-			}
-			else{
-				return true;
-			}
-		}
-
-		Node_s* node_pointer_;		
-	};
-
-
-	//! Default constructor
-	Stack(){
-		head_ = std::make_unique<Node_s>();
-	};
-
-	//! Copy constructor
-	Stack(const Stack& other){
-		head_ = std::make_unique<Node_s>();
-		this->head_ = std::make_unique<Node_s>(*other.head_);
-
-	};
-
-	//! Move constructor
-	Stack(Stack&& other){
-		head_ = std::make_unique<Node_s>();
-		if (this != &other) {
-			this->head_->next_ = std::move(other.head_->next_);
-		}
-	};
-
-	//! Destructor
-	~Stack(){};
-
-	//! Copy assignment operator
-	Stack& operator= (const Stack& other){
-        this->head_ = std::make_unique<Node_s>(*other.head_);
-		return *this;
-	}
-
-	//! Move assignment operator
-	Stack& operator= (Stack&& other){
-		if (this != &other) {
-			this->head_->next_ = std::move(other.head_->next_);
-		}
-		return *this;
-	};
-
-
-	//
-	// Accessors:
-	//
-	//! How many elements are in this list?
-	size_t size() const{
-
-		int count = 0;
-		if (head_->getNext() == nullptr){
-			count = 0;
-		}else{
-			//traverse through the list until the last node is reached
-			Node_s* current_node = head_->getNext();
-			while (current_node->getNext() != nullptr){
-				current_node = current_node->getNext();
-				count++;
-			}
-			count++;
-		}
-		return count;
-	
-	}
-
-	//! Is this list empty?
-	bool empty() const{
-		if (head_->getNext() == nullptr){
-			return true;
-		}
-		else{
-			return false;
-		}
-	};
-
-	//! Get an iterator to the beginning of the list
-	iterator_s begin(){
-		iterator_s i;
-		i.node_pointer_ = this->head_->getNext();
-		return i;
-
-	};
-
-	//! Get an iterator just past the end of the list
-	iterator_s end(){
-		iterator_s i;
-		i.node_pointer_ = nullptr;
-		return i;
-	}
-
-
-	//
-	// Mutators:
-	//
-
-	//! Copy an element to the front of the list
-	void push(const M& value){
-
-		//create new node
-		std::unique_ptr<Node_s> new_node = std::make_unique<Node_s>(value);
-		
-		//set new node's next pointer to the node that used to be at the front if list is not empty
-		if (head_->getNext() != nullptr){	
-			new_node->setNext(this->head_->next_);
-		}
-
-		//set the head to point to the new node
-		this->head_->setNext(new_node);
-		cout << value << endl;
-		return;
-	};
-
-	//! Move an element to the front of the list
-	void push(M&& value){
-		std::unique_ptr<Node_s> new_node = std::make_unique<Node_s>(std::move(value));		
-
-		//set new node's next pointer to the node that used to be at the front if list is not empty
-		if (head_->getNext() != nullptr){	
-			new_node->setNext(this->head_->next_);
-		}
-
-		//set the head to point to the new node
-		this->head_->setNext(new_node);
-		return;
-	};
-
-	//! Copy an element to the back of the list
-	M top(){
-
-		M ret;
-
-		if (this->empty()){
-			std::cout << "Stack is empty" << std::endl;
-			return M();
-		}
-		return head_->getNext()->getValue();
-	};
-
-	void pop(){
-
-		if (this->empty()){
-			std::cout << "Stack is empty" << std::endl;
-			return;
-		}
-
-		head_->setNext(head_->getNext()->next_);
-
-		return;
-	};
-
-
-
-
-	//! Represents a list element - contains a value and a pointer to the next element
-	class Node_s{
-	public:
-		//! Default constructor
-		Node_s() : next_(nullptr){};
-
-		//! Constructor to initialize with a value
-		Node_s(M value) : value_(std::move(value)), next_(nullptr){};
-
-		//! Copy constructor
-		Node_s(const Node_s& other): value_(other.value_), next_(nullptr){
-    		if (other.next_) {
-    		    next_ = std::make_unique<Node_s>(*other.next_);
-    		}
-		};
-
-		//! Move constructor
-		Node_s(Node_s&& other) : value_(std::move(other.value_)), next_(nullptr){
-    		if (other.next_) {
-    		    next_ = std::move(other.next_);
-    		}
-		};
-
-		//
-		// Accessors:
-		//
-		M getValue(){
-			return value_;
-		};
-
-		Node_s* getNext(){
-			return next_.get();
-		};
-
-		//
-		// Mutators:
-		//		
-		void setValue(M value){
-			value_ = std::move(value);
-			return;
-		};
-		
-		void setNext(std::unique_ptr<Node_s>& next_node){
-			next_ = std::move(next_node);
-			return;
-		};
-
-		//! Destructor
-		~Node_s(){};
-
-		// Pointer to next element
-		std::unique_ptr<Node_s> next_;
-
-	private:
-		// Value of element
-		M value_;
-		
-	};
-private:
-	// Represents the head of the list
-	std::unique_ptr<Node_s> head_;
-};
-
 /**
  * A set that holds values, ignoring duplicates.
  * 
@@ -346,7 +56,7 @@ class Set
 {
 public:
     struct Node; // forward declaration
-	std::unique_ptr<Node> root_;
+	Node* root_;
 	//! Default constructor
 	Set() {} 
 
@@ -407,7 +117,7 @@ public:
 
 		ConstIterator& operator++() //TODO - is this really pre inc?
         {
-            this->InOrder();
+            this->MorrisInOrder();
             return *this;
         }
 
@@ -421,7 +131,6 @@ public:
 			return false; //node is the same
 		}
 
-        Stack<Node*> nodes_;
 		Node *node_pointer_;
 		Node *current_node_;
 		Node *previous_node_;
@@ -430,35 +139,84 @@ public:
         /**
 		 * In Order Tree Traversal
 		*/
-		void InOrder()
+		//void IterativeInOrder()
+		//{
+		//	bool node_incremented = false;
+		//	while (!node_incremented)
+		//	{
+		//		if (nodes_.empty() == true && node_pointer_ == nullptr)
+		//		{
+		//			// finished iterating through the tree
+		//			current_node_ = nullptr; // set to null so it matches the end() iterator
+		//			return;
+		//		}
+//
+		//		if (node_pointer_ != nullptr)
+		//		{
+		//			// move to the left child
+		//			nodes_.push(&node_pointer_);
+		//			node_pointer_ = node_pointer_->left_.get();
+		//		}
+		//		else
+		//		{
+		//			previous_node_ = nodes_.top();
+		//			current_node_ = nodes_.top(); // set the current node for iterator to point to
+		//			node_incremented = true; // lets us exit while loop 
+		//			nodes_.pop();
+		//			node_pointer_ = previous_node_->right_.get(); //move to the right child for next time
+		//		}
+		//	}
+		//	return;
+		//}
+        /**
+		 * In Order Tree Traversal
+		*/
+		void MorrisInOrder()
 		{
 			bool node_incremented = false;
-			while (!node_incremented)
-			{
-				if (nodes_.empty() == true && node_pointer_ == nullptr)
-				{
-					// finished iterating through the tree
-					current_node_ = nullptr; // set to null so it matches the end() iterator
-					return;
-				}
-
-				if (node_pointer_ != nullptr)
-				{
-					// move to the left child
-					nodes_.push(&node_pointer_);
-					node_pointer_ = node_pointer_->left_.get();
+			Node* pre = nullptr;
+			while (!node_incremented && current_node_ != nullptr)
+			{	
+				if (current_node_->left_ == nullptr)
+				{	node_pointer_ = current_node_;
+					if(current_node_->right_ != nullptr){
+						current_node_ = current_node_->right_;//set global current						
+					}
+					else
+					{
+						current_node_ = pre;
+					}
+					node_incremented = true;
+					
 				}
 				else
-				{
-					previous_node_ = nodes_.top();
-					current_node_ = nodes_.top(); // set the current node for iterator to point to
-					node_incremented = true; // lets us exit while loop 
-					nodes_.pop();
-					node_pointer_ = previous_node_->right_.get(); //move to the right child for next time
+				{	
+					pre = current_node_->left_;
+					while (pre->right_ != nullptr && pre->right_ != current_node_)
+					{
+						pre = pre->right_;
+					}
+
+					if(pre->right_ == nullptr)
+					{
+						Node* curr = current_node_;
+						pre->right_.reset(current_node_);
+						current_node_ = curr->left_;
+					}
+					else
+					{
+						node_pointer_ = current_node_;
+						pre->right_ = nullptr;
+						current_node_ = current_node_->right_;
+						node_incremented = true;
+					}
 				}
 			}
+
 			return;
 		}
+
+
 	};
 
 	//! An iterator over the set's values that *is* allowed to change values.
@@ -471,7 +229,7 @@ public:
 
 		Iterator& operator++() //TODO - is this really pre inc?
         {
-            this->InOrder();
+            this->MorrisInOrder();
             return *this;
         }
     	
@@ -485,44 +243,91 @@ public:
 			return false; //node is the same
 		}
 
-        Stack<Node*> nodes_;
 		Node *node_pointer_;
-		Node *current_node_;
+		unique_ptr<Node> current_node_;
 		Node *previous_node_;
     private:
 
         /**
 		 * In Order Tree Traversal
 		*/
-		void InOrder()
+		//void IterativeInOrder()
+		//{
+		//	bool node_incremented = false;
+		//	while (!node_incremented)
+		//	{
+		//		if (nodes_.empty() == true && node_pointer_ == nullptr)
+		//		{
+		//			// finished iterating through the tree
+		//			current_node_ = nullptr; // set to null so it matches the end() iterator
+		//			return;
+		//		}
+//
+		//		if (node_pointer_ != nullptr)
+		//		{
+		//			// move to the left child
+		//			nodes_.push(node_pointer_);
+		//			node_pointer_ = node_pointer_->left_.get();
+		//		}
+		//		else
+		//		{
+		//			previous_node_ = nodes_.top();
+		//			current_node_ = nodes_.top(); // set the current node for iterator to point to
+		//			node_incremented = true; // lets us exit while loop 
+		//			nodes_.pop();
+		//			node_pointer_ = previous_node_->right_.get(); //move to the right child for next time
+		//		}
+		//	}
+		//	return;
+		//}
+        /**
+		 * In Order Tree Traversal
+		*/
+		void MorrisInOrder()
 		{
 			bool node_incremented = false;
-			while (!node_incremented)
-			{
-				if (nodes_.empty() == true && node_pointer_ == nullptr)
-				{
-					// finished iterating through the tree
-					current_node_ = nullptr; // set to null so it matches the end() iterator
-					return;
-				}
-
-				if (node_pointer_ != nullptr)
-				{
-					// move to the left child
-					nodes_.push(node_pointer_);
-					node_pointer_ = node_pointer_->left_.get();
+			Node* pre = nullptr;
+			while (!node_incremented && current_node_ != nullptr)
+			{	
+				if (current_node_->left_ == nullptr)
+				{	node_pointer_ = current_node_;
+					if(current_node_->right_ != nullptr){
+						current_node_ = current_node_->right_;//set global current						
+					}
+					else
+					{
+						current_node_ = pre;
+					}
+					node_incremented = true;
+					
 				}
 				else
-				{
-					previous_node_ = nodes_.top();
-					current_node_ = nodes_.top(); // set the current node for iterator to point to
-					node_incremented = true; // lets us exit while loop 
-					nodes_.pop();
-					node_pointer_ = previous_node_->right_.get(); //move to the right child for next time
+				{	
+					pre = current_node_->lef;
+					while (pre->right_ != nullptr && pre->right_ != current_node_)
+					{
+						pre = pre->right_;
+					}
+
+					if(pre->right_ == nullptr)
+					{
+						Node* curr = std::copy(current_node_);
+						pre->right_.reset(current_node_);
+						current_node_ = curr->left_;
+					}
+					else
+					{
+						node_pointer_ = current_node_;
+						pre->right_ = nullptr;
+						current_node_ = current_node_->right_;
+						node_incremented = true;
+					}
 				}
 			}
+
 			return;
 		}
+
 	};
 
 	// Iterators over const and non-const sets:
@@ -530,8 +335,8 @@ public:
     {
         Iterator iter;
 
-		iter.node_pointer_ = this->root_.get();
-		iter.current_node_ = this->root_.get();
+		iter.node_pointer_ = this->root_;
+		iter.current_node_ = this->root_;
 		return ++iter;
     }
 
@@ -539,8 +344,8 @@ public:
     {
         Iterator iter;
 
-		iter.node_pointer_ = this->root_.get();
-		iter.current_node_ = this->root_.get();
+		iter.node_pointer_ = this->root_;
+		iter.current_node_ = this->root_;
 		return ++iter;
     }
 
@@ -591,7 +396,7 @@ struct Node
 			{
 				o << "  \"" << this << "\""
 					<< " -> "
-					<< "\"" << left_.get() << "\""
+					<< "\"" << left_ << "\""
 					<< " [ label = \"L\" ]\n";
 
 				left_->printDot(o);
@@ -601,7 +406,7 @@ struct Node
 			{
 				o << "  \"" << this << "\""
 					<< " -> "
-					<< "\"" << right_.get() << "\""
+					<< "\"" << right_ << "\""
 					<< " [ label = \"R\" ]\n";
 
 				right_->printDot(o);
@@ -634,8 +439,8 @@ struct Node
 			if (compare(node->value(),  current_min->value())) {
         		current_min = node;
     		}
-    		Node* left_min = find_min(node->left_.get(), current_min, compare);
-    		Node* right_min = find_min(node->right_.get(), current_min, compare);
+    		Node* left_min = find_min(node->left_, current_min, compare);
+    		Node* right_min = find_min(node->right_, current_min, compare);
 
     		if (left_min != nullptr &&  compare(left_min->value(), current_min->value())) {
 				current_min = left_min;
@@ -662,8 +467,8 @@ struct Node
    			if (compare(current_max->value(), node->value() )) {
         		current_max = node;
     		}
-    		Node* left_max = find_max(node->left_.get(), current_max, compare);
-    		Node* right_max = find_max(node->right_.get(), current_max, compare);
+    		Node* left_max = find_max(node->left_, current_max, compare);
+    		Node* right_max = find_max(node->right_, current_max, compare);
 
     		if (left_max != nullptr &&  compare(current_max->value(), left_max->value()) ) {
 				current_max = left_max;
@@ -735,8 +540,8 @@ struct Node
 		T element_;
 		size_t count_;
 		int height_;
-		std::unique_ptr<Node> left_;
-		std::unique_ptr<Node> right_;
+		Node* left_;
+		Node* right_;
 		int bf_;
 	};
 private:
