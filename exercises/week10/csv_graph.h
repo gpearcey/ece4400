@@ -58,7 +58,7 @@ public:
         double distance;
     };
     
-	Vertex** head_;
+	Vertex* head_;
 private:
     
     size_t num_vertexes_;

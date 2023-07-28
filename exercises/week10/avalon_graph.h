@@ -72,30 +72,6 @@ public:
 			}
 		}
 	}
-# Iterative algorithm:
-while |vertices with done=F| > 0
-    # Pick a vertext to work on:
-    v = smallest-distance vertex with done=F
-
-    # Consider each edge:
-    for each e in v.edges
-        # Pick a vertex from our {list, BST, heap...}
-        neighbour = other vertex of e
-
-        # Have we already finished exploring the neighbour vertex?
-        if ¬neighbour.done
-            # How long is the path through v to this neighbour?
-            distance through v = v.distance + e.distance
-
-            # Is the path through v better than what we have now?
-            if neighbour.distance > distance through v
-                # Set neighbour.distance and (possibly) update the
-                # data structure holding not-yet-done vertices
-                update neighbour.distance to distance through v
-
-                # The new shortest path to neighbour goes through v
-                neighbour.path = v
-	}
 
 	bool verticiesNotDone(){
 		for (Vertex v : verticies_list_)
