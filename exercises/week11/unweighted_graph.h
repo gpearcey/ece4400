@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <cmath>
 
 using namespace std;
 template<typename T, typename E>
@@ -78,7 +79,6 @@ public:
 
         for (size_t dist = 0; dist < verticies_.size(); ++dist)
         {   
-            cout << " dist = " << dist << endl;
             for(auto v : verticies_)
             {
                 if (done[v.getID()] || distance[v.getID()] != dist)
@@ -107,6 +107,7 @@ public:
     {
         std::vector<E> distance(verticies_.size(), -1);
         std::vector<size_t> path(verticies_.size(), 0);
+        std::vector<bool> done(verticies_.size(), false);
         distance[source] = 0;
 
         std::queue<size_t> q;
@@ -131,21 +132,93 @@ public:
         return distance;
     }
 
-    void printDistanceMatrix() {
-        std::vector<std::vector<E>> matrix(verticies_.size(), std::vector<int>(verticies_.size(), 0));
-        
-        // Create Matrix
-        for (int i = 0; i < matrix.size(); i++)
-        {
-            matrix[i] = shortestWorkList(i);
+    bool verticiesDone(std::vector<bool> &vec)
+    {
+        for (auto i : vec) {
+            if (i == false)
+            {
+                return false;
+            }
+
         }
 
-        // Print Matrix
+        return true;
+    }
+    std::vector<E> shortestDijkstras(size_t source)
+    {
+        std::vector<E> distance(verticies_.size(), INFINITY);
+        std::vector<size_t> path(verticies_.size(), 0);
+        std::vector<bool> done(verticies_.size(), false);
+        distance[source] = 0;
+
+        while (!verticiesDone(done))
+        {
+            Vertex<E> v = verticies_[0];
+            for (auto i : this->verticies_)
+            {
+                if ((distance[i.getID()] < distance[v.getID()]) && (done[i.getID()] == false))
+                {
+                    v = i;
+                }
+            }
+
+            for (auto n : neighbors_[v.getID()])
+            {
+                E weight = n.distance_;
+
+                if (done[n.getID()])
+                {
+                    E dist = distance[v.getID()] + n.distance_;
+
+                    if (distance[n.getID()] > dist)
+                    {
+                        distance[n.getID()] = dist;
+                        path[n.getID()] = v.getID();
+                    }
+                }
+
+            }
+
+            
+        }
+        return distance;
+    }
+
+    void printDistanceMatrix() {
+        std::vector<std::vector<E>> matrix;
+        
+        // Create Matrix
+        for (int i = 0; i < verticies_.size(); i++)
+        {
+            matrix.push_back(shortestWorkList(i));
+        }
+
+        // Print Matrix        
         for (int j = 0; j < verticies_.size(); j++)
         {
-            for (int k = 0; j < verticies_.size(); k++)
+            for (int k = 0; k < verticies_.size(); k++)
             {
-                cout << matrix[j][k];
+                cout << matrix[j][k] << " ";
+            }
+            cout << endl;
+        }
+
+    }
+    void printDistanceMatrixWeighted() {
+        std::vector<std::vector<E>> matrix;
+        
+        // Create Matrix
+        for (int i = 0; i < verticies_.size(); i++)
+        {
+            matrix.push_back(shortestDijkstras(i));
+        }
+
+        // Print Matrix        
+        for (int j = 0; j < verticies_.size(); j++)
+        {
+            for (int k = 0; k < verticies_.size(); k++)
+            {
+                cout << matrix[j][k] << " ";
             }
             cout << endl;
         }
