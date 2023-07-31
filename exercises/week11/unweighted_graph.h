@@ -150,26 +150,32 @@ public:
         std::vector<size_t> path(verticies_.size(), 0);
         std::vector<bool> done(verticies_.size(), false);
         distance[source] = 0;
-
+        Vertex<E> v = verticies_[0];
         while (!verticiesDone(done))
         {
-            Vertex<E> v = verticies_[0];
+            //cout << "verticies not done" << endl;
+            
             for (auto i : this->verticies_)
             {
+                //cout << "checking if i is smaller" << endl;
                 if ((distance[i.getID()] < distance[v.getID()]) && (done[i.getID()] == false))
                 {
                     v = i;
+                    cout << "updating v" << endl;
                 }
             }
 
+            //cout << "element value: " << v.getValue() << endl;
+            // TODO set all n.done to false, then set true
             for (auto n : neighbors_[v.getID()])
             {
                 E weight = n.distance_;
+                cout << "weight " << weight << endl;
 
-                if (done[n.getID()])
+                if (!done[n.getID()])
                 {
                     E dist = distance[v.getID()] + n.distance_;
-
+                    cout << "dist " << dist << endl;
                     if (distance[n.getID()] > dist)
                     {
                         distance[n.getID()] = dist;
@@ -178,6 +184,10 @@ public:
                 }
 
             }
+
+            //cout << " done status of v: " <<  done[v.getID()] << endl;
+
+            done[v.getID()] = true;
 
             
         }
