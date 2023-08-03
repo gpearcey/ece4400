@@ -1,4 +1,4 @@
-#include "unweighted_graph.h"
+#include "graph.h"
 #include <iostream>
 
 using namespace std;
@@ -24,22 +24,22 @@ int main()
     std::vector<int> dist = g.shortestNaive(0);
     std::vector<int> dist_WL = g.shortestWorkList(0);
 
-    //for (auto i : dist)
-    //{
-    //    cout << i;
-    //}
-    //cout << endl;
-//
-    //for (auto i : dist_WL)
-    //{
-    //    cout << i;
-    //}
-    //cout << endl;
-//
-    //g.printDistanceMatrix();
+    for (auto i : dist)
+    {
+        cout << i;
+    }
+    cout << endl;
 
-        /**
-     * Unweighted Graph
+    for (auto i : dist_WL)
+    {
+        cout << i;
+    }
+    cout << endl;
+
+    g.printDistanceMatrix();
+
+    /**
+     * Weighted Graph
     */
     Graph<int,int> wg;
 
@@ -60,13 +60,12 @@ int main()
 
     std::vector<int> d = wg.shortestDijkstras(0);
 
-    //for (auto i : d)
-    //{
-    //    cout << i;
-    //}
-    //cout << endl;
-
-    //wg.printDistanceMatrixWeighted();
+    for (auto i : d)
+    {
+        cout << i;
+    }
+    cout << endl;
+    wg.printDistanceMatrixWeighted();
 
     return 0;
 };
