@@ -29,29 +29,24 @@ int main()
 	bst.insert(10);
 	bst.insert(5);
 	bst.insert(15);
-	bst.insert(20);
-	bst.insert(30);
-	bst.insert(35);
-	bst.insert(21);
-	bst.insert(22);
-
-
-	std::cout << "max value: " << bst.max() << "\n";
-	std::cout << "min value: " << bst.min() << "\n";
-
-	std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
-	std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
-
-	cout << "The max depth of this tree is " << bst.maxDepth() << endl;
-
-	cout << "Height of the tree is " << bst.root_->right_->height_ << endl;
-
-    //std::ofstream file("bst.dot");
-    //if (file.is_open()) {
-    //    bst.printDot(file);
-    //    file.close();
-    //}
-
+	bst.insert(50);
+	//bst.insert(20);
+	//bst.insert(30);
+	//bst.insert(35);
+	//bst.insert(21);
+	//bst.insert(22);
+//
+//
+	//std::cout << "max value: " << bst.max() << "\n";
+	//std::cout << "min value: " << bst.min() << "\n";
+//
+	//std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
+	//std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
+//
+	//cout << "The max depth of this tree is " << bst.maxDepth() << endl;
+//
+	//cout << "Height of the tree is " << bst.root_->right_->height_ << endl;
+//
 	bst.printDot(std::cout);
 	return 0;
 }
