@@ -64,13 +64,12 @@ public:
 	//! Is this tree empty?
 	bool empty() const
 	{
-		cerr << "called the empty function" << endl;
 		return (not root_);
 	}
 
 	//! Insert a new value into the appropriate place in the tree.
 	void insert(T value)
-	{cout << "apple" << endl;
+	{
 
 		if (this->empty()){
 			std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value));
@@ -78,7 +77,6 @@ public:
 		}
 
 		else{
-			cout << "test" << endl;
 			insert(std::move(value), root_);
 		}
 		
@@ -135,56 +133,6 @@ public:
 	bool remove(const T &&value)
 	{
 		return remove(value, root_);
-	}
-
-		/**
-	 * Updates the height of a node and the heights of it's children
-	 * 
-	 * @returns int
-	 * 
-	 */
-	void updateHeights(){
-		if (this == nullptr) {
-			return;
-		}
-		int left_height = 0;
-		int right_height = 0;
-		if (this->left_ != nullptr){
-			left_height = getHeight(this->left_);
-		}
-		if (this->right_ != nullptr){
-			right_height = getHeight(this->left_);
-		}
-		if (left_height > right_height){
-			this->height_ = left_height +1;
-		}
-		else {
-			this->height_ = right_height +1;
-		}
-		return;
-	}
-
-	/**
-	 * Prints the tree structure. 
-	 * 
-	 * Prints the root first, then it's children on the next line, then the children of it's children on the following line, and so on.
-	 * Iterates through the tree and places children in appropriate sub arrays based on node height, then prints each sub array. 
-	*/
-	void print(){
-		int depth = this->maxDepth();
-
-		std::vector<std::vector<T>> values_to_print;
-
-		values_to_print.resize(depth + 1); //add one to include root
-
-		this->root_->print(values_to_print, depth);
-
-		for (int i = values_to_print.size() - 1; i >= 0; --i){
-			for (const T& value : values_to_print[i]){
-				cout << value << "  ";
-			}
-			cout << endl;
-		}
 	}
 
 	/**
@@ -561,7 +509,6 @@ private:
 	 *                     may be null if the (sub-)tree is empty
 	 */
 	void insert(T &&value, std::unique_ptr<Node> &node){
-		std::cout << "HI" << std::endl;
 		if (not node)
 		{
 			node = std::make_unique<Node>(std::move(value));
@@ -571,16 +518,15 @@ private:
 			insert(std::move(value), node->left_);
 
 			// Update Heights
-			if (node->right == nullptr)
+			if (node->right_ == nullptr)
 			{
 				node->height_ = node->left_->height_ + 1;
 			}
 			else
 			{
-				node->height_ = std::max(node->left_, node->right_) + 1;
+				node->height_ = std::max(node->left_->height_, node->right_->height_) + 1;
 			}
-
-			std::cout << "height of " << node_->value << " is " << node->height_ << std::endl;
+			std::cout << "height of " << node->element_ << " is " << node->height_ << std::endl;
 		}
 		else if (compare_(node->element_, value))
 		{
@@ -593,9 +539,9 @@ private:
 			}
 			else
 			{
-				node->height_ = std::max(node->left_, node->right_) + 1;
+				node->height_ = std::max(node->left_->height_, node->right_->height_) + 1;
 			}
-			std::cout << "height of " << node_->value << " is " << node->height_ << std::endl;
+			std::cout << "height of " << node->element_ << " is " << node->height_ << std::endl;
 		}
 		else {
 			node->count_++;

@@ -36,15 +36,15 @@ int main()
 	bst.insert(22);
 
 
-	//std::cout << "max value: " << bst.max() << "\n";
-	//std::cout << "min value: " << bst.min() << "\n";
-//
-	//std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
-	//std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
-//
-	//cout << "The max depth of this tree is " << bst.maxDepth() << endl;
-//
-	//cout << "Height of the tree is " << bst.root_->left_->height_ << endl;
+	std::cout << "max value: " << bst.max() << "\n";
+	std::cout << "min value: " << bst.min() << "\n";
+
+	std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
+	std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
+
+	cout << "The max depth of this tree is " << bst.maxDepth() << endl;
+
+	cout << "Height of the tree is " << bst.root_->right_->height_ << endl;
 
     //std::ofstream file("bst.dot");
     //if (file.is_open()) {
@@ -52,6 +52,6 @@ int main()
     //    file.close();
     //}
 
-	//bst.printDot(std::cout);
+	bst.printDot(std::cout);
 	return 0;
 }
