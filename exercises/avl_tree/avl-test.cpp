@@ -22,31 +22,31 @@ using namespace std;
 
 int main()
 {
-	BinarySearchTree<int> bst;
-	cout << bst.empty() << endl;
+	AVLTree<int> avl;
+	cout << avl.empty() << endl;
 
 
-	bst.insert(10);
-	bst.insert(5);
-	bst.insert(15);
-	bst.insert(50);
-	//bst.insert(20);
-	//bst.insert(30);
-	//bst.insert(35);
-	//bst.insert(21);
-	//bst.insert(22);
+	avl.insert(10);
+	avl.insert(5);
+	avl.insert(15);
+	avl.insert(50);
+	avl.insert(20);
+	avl.insert(30);
+	avl.insert(35);
+	avl.insert(21);
+	avl.insert(22);
 //
 //
-	//std::cout << "max value: " << bst.max() << "\n";
-	//std::cout << "min value: " << bst.min() << "\n";
+	//std::cout << "max value: " << avl.max() << "\n";
+	//std::cout << "min value: " << avl.min() << "\n";
 //
-	//std::cout << "Tree contains 8 is " << bst.contains(8) << endl;
-	//std::cout << "Tree contains 99 is " << bst.contains(99) << endl;
+	//std::cout << "Tree contains 8 is " << avl.contains(8) << endl;
+	//std::cout << "Tree contains 99 is " << avl.contains(99) << endl;
 //
-	//cout << "The max depth of this tree is " << bst.maxDepth() << endl;
+	//cout << "The max depth of this tree is " << avl.maxDepth() << endl;
 //
-	//cout << "Height of the tree is " << bst.root_->right_->height_ << endl;
+	//cout << "Height of the tree is " << avl.root_->right_->height_ << endl;
 //
-	bst.printDot(std::cout);
+	avl.printDot(std::cout);
 	return 0;
 }

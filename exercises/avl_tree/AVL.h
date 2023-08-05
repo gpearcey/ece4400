@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Implement the insert, Node::min and Node::max methods recursively.
 
-Implement the BinarySearchTree::print method using a recursive Node::print method.
-*/
 
 #if !defined(AVL_H)
 #define AVL_H
@@ -33,7 +29,7 @@ Implement the BinarySearchTree::print method using a recursive Node::print metho
 #include <algorithm>
 using namespace std;
 template<typename T, typename Comparator = std::less<T>>
-class BinarySearchTree
+class AVLTree
 {
 public:
 
@@ -78,6 +74,7 @@ public:
 
 		else{
 			insert(std::move(value), root_);
+			root_->updateHeights();
 		}
 		
 		
@@ -454,13 +451,15 @@ public:
 		 * @returns int
 		 * 
 		 */
-		size_t getHeight(std::unique_ptr<Node> &node){
+		int getHeight(std::unique_ptr<Node> &node){
 			if (node == nullptr) {
-				return 0;
+				return -1;
 			}
-			size_t left_height = getHeight(node->left_);
-			size_t right_height = getHeight(node->right_);
-			return std::max(left_height, right_height);
+			int left_height = getHeight(node->left_); //TODO update a nodes height here - this should be the workhorse function
+			int right_height = getHeight(node->right_);
+			node->height_ = std::max(left_height, right_height) + 1;
+
+			return std::max(left_height, right_height) + 1;
 		}
 		/**
 		 * Updates the height of a node and the heights of it's children
@@ -472,25 +471,10 @@ public:
 			if (this == nullptr) {
 				return;
 			}
-			int left_height = 0;
-			int right_height = 0;
-			if (this->left_ != nullptr){
-				left_height = getHeight(this->left_);
-			}
-			if (this->right_ != nullptr){
-				right_height = getHeight(this->right_);
-			}
-			if (left_height > right_height){
-				this->height_ = left_height +1;
-			}
-			else {
-				this->height_ = right_height +1;
-			}
-			if (this->element_ == 10)
-			{
-				cout << "L " << left_height << " R " << right_height << endl;
-				cout << "L " << this->left_->height_ << " R " << right_height << endl;
-			}
+			int lh = getHeight(this->left_);
+			int rh = getHeight(this->right_);
+			this->height_ = std::max(lh, rh) + 1;
+
 			return;
 		}
 		T takeMin();
@@ -536,15 +520,12 @@ private:
 
 			insert(std::move(value), node->left_);
 
-			cout << "just inserted " << value << " as left child of " << node->element_ << endl;
-
 			// Update Heights and get balance factor
 			if (node->right_ == nullptr)
 			{
 				node->height_ = node->left_->height_ + 1;
 
 				node->bf_ = node->left_->height_ + 1;
-				cout << "bf of " << node->element_ << " is " << node->bf_ << endl;
 			}
 			else
 			{
@@ -558,33 +539,27 @@ private:
 			// Do we need to re-balance?
 			if (node->bf_ > 1)
 			{
-				cout << "debug" << endl;
 				if (node->left_->bf_ == 1)
 				{
 					// Right Rotation
-					cout << "yogurt" << endl;
 					std::unique_ptr<Node> newRoot = std::move(node->left_);
-					node->left_ = std::move(newRoot->right_); // idk if i need this
+					node->left_ = std::move(newRoot->right_); 
 					newRoot->right_ = std::move(node);
 					node = std::move(newRoot);
 				}
 				else if (node->left_->bf_ == -1)
 				{
 					// Do Left-Right Rotation
-					if (node->element_ == 10)
-					{
-						cout << "LR rot" << endl;
-					}
 
 					// Left Rotation on node's left child
 					std::unique_ptr<Node> newSubRoot = std::move(node->left_->right_);
-					node->left_->right_ = std::move(newSubRoot->left_); // idk if i need this
+					node->left_->right_ = std::move(newSubRoot->left_); 
 					newSubRoot->left_ = std::move(node->left_);
 					node->left_ = std::move(newSubRoot);
 
 					// Right rotation on node
 					std::unique_ptr<Node> newRoot = std::move(node->left_);
-					node->left_ = std::move(newRoot->right_); // idk if i need this
+					node->left_ = std::move(newRoot->right_); 
 					newRoot->right_ = std::move(node);
 					node = std::move(newRoot);
 
@@ -596,7 +571,7 @@ private:
 			}
 
 			// Update heights after rotation
-			node->updateHeights();
+			//node->updateHeights();
 
 		}
 		else if (compare_(node->element_, value))
@@ -618,44 +593,30 @@ private:
 				node->bf_ = node->left_->height_ - node->right_->height_;
 			}
 
-			if (node->element_ == 20)
-			{
-				cout << "20 BF is " << node->bf_ << endl;
-				cout << "left height " << node->left_->height_ << " right height " << node->right_->height_ << endl;
-				this->printDot(std::cout);
-			}
-
 			// Do we need to re-balance?
 			if (node->bf_ < -1)
 			{
 				if (node->right_->bf_ == 1)
 				{
 					// Do Right-Left Rotation
-					if (node->element_ == 10)
-					{
-						cout << "RL rot" << endl;
-					}
+
 					// Right Rotation on node's right child
 					std::unique_ptr<Node> newSubRoot = std::move(node->right_->left_);
-					node->right_->left_ = std::move(newSubRoot->right_); // idk if i need this
+					node->right_->left_ = std::move(newSubRoot->right_); 
 					newSubRoot->right_ = std::move(node->right_);
 					node->right_ = std::move(newSubRoot);
 
 					// Left rotation on node
 					std::unique_ptr<Node> newRoot = std::move(node->right_);
-					node->right_ = std::move(newRoot->left_); // idk if i need this
+					node->right_ = std::move(newRoot->left_); 
 					newRoot->left_ = std::move(node);
 					node = std::move(newRoot);
 				}
 				else if (node->right_->bf_ == -1)
 				{
 					// Do Left Rotation
-					if (node->element_ == 10)
-					{
-						cout << "L rot as expected" << endl;
-					}
 					std::unique_ptr<Node> newRoot = std::move(node->right_);
-					node->right_ = std::move(newRoot->left_); // idk if i need this
+					node->right_ = std::move(newRoot->left_); 
 					newRoot->left_ = std::move(node);
 					node = std::move(newRoot);
 
@@ -666,8 +627,6 @@ private:
 				}
 			}
 
-			// Update heights after rotation
-			node->updateHeights();
 		}
 		else {
 			node->count_++;
