@@ -21,14 +21,14 @@ int main()
     g.addEdge(3,0);
 
 
-    std::vector<int> dist = g.shortestNaive(0);
+    //std::vector<int> dist = g.shortestNaive(0);
     std::vector<int> dist_WL = g.shortestWorkList(0);
 
-    for (auto i : dist)
-    {
-        cout << i;
-    }
-    cout << endl;
+    //for (auto i : dist)
+    //{
+    //    cout << i;
+    //}
+    //cout << endl;
 
     for (auto i : dist_WL)
     {
@@ -36,12 +36,12 @@ int main()
     }
     cout << endl;
 
-    g.printDistanceMatrix();
+    //g.printDistanceMatrix();
 
     /**
      * Weighted Graph
     */
-    Graph<int,int> wg;
+    /*Graph<int,int> wg;
 
     wg.addVertex(0);
     wg.addVertex(1);
@@ -66,6 +66,6 @@ int main()
     }
     cout << endl;
     wg.printDistanceMatrixWeighted();
-
+*/
     return 0;
 };
