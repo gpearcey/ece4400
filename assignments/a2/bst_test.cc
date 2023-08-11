@@ -10,10 +10,10 @@ int main(){
 	BinarySearchTree<int> t;
 
 	// Fancy way of not having to write BinarySearchTree<int> twice:
-	const auto Order = decltype(t)::Traversal::PreOrder;
+	const auto Order = decltype(t)::Traversal::InOrder;
 
 	//// Insert the values 4, 2, 6, 1, 3, 5 and 7:
-	for (int n : { 4, 2, 6, 1, 3, 5, 7 })
+	for (int n : { 50, 25, 80, 60, 70, 99})
 	{
 		t.insert(n);
 	}

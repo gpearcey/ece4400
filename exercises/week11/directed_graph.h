@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <cmath>
 
 using namespace std;
@@ -306,10 +307,39 @@ public:
 
         }
         cout << endl;
+    }
+    // TODO - incorrect, needs to be recursive
+    void dfs(size_t source)
+    {
+        
 
+        stack<size_t> worklist; //stores IDs of visited verticies
+        vector<size_t> visited; //stores IDs
 
+        worklist.push(source);
 
+        while(!worklist.empty())
+        {
+            size_t current_v = worklist.top();
+            worklist.pop();
 
+            for (auto n: neighbors_[current_v])
+            {
+                worklist.push(n.getID());
+            }
+
+            visited.push_back(current_v);
+            
+
+        }
+
+        // Print the "searched" graph
+        cout << "DFS: ";
+        for (auto i : visited)
+        {
+            cout << i  << ", ";
+        }
+        cout << endl;
     }
 
     ~Graph() {}

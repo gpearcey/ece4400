@@ -40,7 +40,8 @@ int main()
     //cout << endl;
     //g.printDistanceMatrixWeighted();
 
-    g.topoSort();
+    //g.topoSort();
+    g.dfs(0);
 
     return 0;
 };
